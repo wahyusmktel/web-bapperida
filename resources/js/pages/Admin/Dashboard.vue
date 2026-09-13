@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import AdminLayout from '@/layouts/AdminLayout.vue';
 import {
     FileText,
@@ -316,27 +316,27 @@ defineProps<Props>();
                         </h3>
 
                         <div class="space-y-2">
-                            <a
-                                href="#"
+                            <Link
+                                href="/admin/documents"
                                 class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-teal-50 hover:text-teal-800 border border-slate-200/60 transition-all"
                             >
                                 <span>Unggah Dokumen Perencanaan</span>
                                 <ArrowUpRight class="w-3.5 h-3.5 opacity-60" />
-                            </a>
-                            <a
-                                href="#"
+                            </Link>
+                            <Link
+                                href="/admin/news"
                                 class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-teal-50 hover:text-teal-800 border border-slate-200/60 transition-all"
                             >
                                 <span>Tulis Berita Bidang Baru</span>
                                 <ArrowUpRight class="w-3.5 h-3.5 opacity-60" />
-                            </a>
-                            <a
-                                href="#"
+                            </Link>
+                            <Link
+                                href="/admin/indexes"
                                 class="w-full flex items-center justify-between px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 bg-slate-50 hover:bg-teal-50 hover:text-teal-800 border border-slate-200/60 transition-all"
                             >
                                 <span>Perbarui Nilai Indeks Daerah</span>
                                 <ArrowUpRight class="w-3.5 h-3.5 opacity-60" />
-                            </a>
+                            </Link>
                         </div>
                     </div>
 

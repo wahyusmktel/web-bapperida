@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ActivityLog;
+use App\Models\NewsArticle;
+use App\Models\PlanningDocument;
+use App\Models\RegionalIndex;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -35,39 +39,45 @@ class DashboardController extends Controller
                 ];
             });
 
-        // Statistics overview
-        $stats = [
-            'total_users' => User::count(),
-            'total_documents' => 24, // baseline default, will connect to PlanningDocument in Phase 3
-            'total_news' => 18,      // baseline default, will connect to News in Phase 3
-            'total_services' => 12,  // baseline default, will connect to ServiceRequest in Phase 3
-            'indexes' => [
-                'iid' => [
-                    'name' => 'Indeks Inovasi Daerah (IID)',
-                    'score' => '62.45',
-                    'category' => 'Sangat Inovatif',
-                    'year' => 2025,
+        // Statistics overview with Redis Cache
+        $stats = Cache::remember('bapperida:stats:overview', now()->addMinutes(15), function () {
+            $iid = RegionalIndex::where('code', 'IID')->orderByDesc('year')->first();
+            $idsd = RegionalIndex::where('code', 'IDSD')->orderByDesc('year')->first();
+            $ipkd = RegionalIndex::where('code', 'IPKD')->orderByDesc('year')->first();
+
+            return [
+                'total_users' => User::count(),
+                'total_documents' => PlanningDocument::count(),
+                'total_news' => NewsArticle::count(),
+                'total_services' => 12,
+                'indexes' => [
+                    'iid' => [
+                        'name' => 'Indeks Inovasi Daerah (IID)',
+                        'score' => (string) ($iid?->score ?? '62.45'),
+                        'category' => $iid?->predicate ?? 'Sangat Inovatif',
+                        'year' => $iid?->year ?? 2025,
+                    ],
+                    'idsd' => [
+                        'name' => 'Indeks Daya Saing Daerah (IDSD)',
+                        'score' => (string) ($idsd?->score ?? '3.42'),
+                        'category' => $idsd?->predicate ?? 'Tinggi',
+                        'year' => $idsd?->year ?? 2025,
+                    ],
+                    'ipkd' => [
+                        'name' => 'Indeks Pengelolaan Keuangan Daerah (IPKD)',
+                        'score' => (string) ($ipkd?->score ?? '84.10'),
+                        'category' => $ipkd?->predicate ?? 'Baik',
+                        'year' => $ipkd?->year ?? 2025,
+                    ],
                 ],
-                'idsd' => [
-                    'name' => 'Indeks Daya Saing Daerah (IDSD)',
-                    'score' => '3.42',
-                    'category' => 'Tinggi',
-                    'year' => 2025,
+                'system' => [
+                    'php_version' => PHP_VERSION,
+                    'laravel_version' => app()->version(),
+                    'db_driver' => DB::connection()->getDriverName(),
+                    'server_time' => now()->translatedFormat('l, d F Y H:i:s T'),
                 ],
-                'ipkd' => [
-                    'name' => 'Indeks Pengelolaan Keuangan Daerah (IPKD)',
-                    'score' => '84.10',
-                    'category' => 'Baik',
-                    'year' => 2025,
-                ],
-            ],
-            'system' => [
-                'php_version' => PHP_VERSION,
-                'laravel_version' => app()->version(),
-                'db_driver' => DB::connection()->getDriverName(),
-                'server_time' => now()->translatedFormat('l, d F Y H:i:s T'),
-            ],
-        ];
+            ];
+        });
 
         return Inertia::render('Admin/Dashboard', [
             'stats' => $stats,
