@@ -29,14 +29,14 @@ class HomeController extends Controller
                 })
                 ->orderByDesc('year')
                 ->orderByDesc('published_at')
-                ->take(4)
+                ->take(6)
                 ->get();
 
             if ($featuredDocuments->isEmpty()) {
                 $featuredDocuments = PlanningDocument::with('category:id,name,slug')
                     ->where('is_published', true)
                     ->orderByDesc('year')
-                    ->take(4)
+                    ->take(6)
                     ->get();
             }
 
@@ -68,8 +68,8 @@ class HomeController extends Controller
             // Latest News Articles
             $latestNews = NewsArticle::with('category:id,name,code,slug,color')
                 ->where('is_published', true)
-                ->latest('published_at')
-                ->take(6)
+                ->orderByDesc('published_at')
+                ->take(24)
                 ->get()
                 ->map(function ($art) use ($categoryImages) {
                     $catCode = $art->category?->code ?? 'UMUM';

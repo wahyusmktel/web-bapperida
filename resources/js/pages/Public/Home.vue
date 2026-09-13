@@ -23,6 +23,8 @@ import {
     Building2,
     Compass,
     MapPin,
+    Clock,
+    BookOpen,
 } from 'lucide-vue-next';
 
 interface DocumentItem {
@@ -95,6 +97,18 @@ const filteredNews = computed(() => {
         return props.latestNews;
     }
     return props.latestNews.filter((n) => n.category_slug === activeBidang.value);
+});
+
+const leadNews = computed(() => {
+    return filteredNews.value.length > 0 ? filteredNews.value[0] : null;
+});
+
+const secondaryNews = computed(() => {
+    return filteredNews.value.length > 1 ? filteredNews.value.slice(1, 4) : [];
+});
+
+const moreNews = computed(() => {
+    return filteredNews.value.length > 4 ? filteredNews.value.slice(4) : [];
 });
 
 const getIndexReportUrl = (code: string) => {
@@ -475,24 +489,24 @@ onUnmounted(() => {
                     </Link>
                 </div>
 
-                <!-- Documents Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Documents Grid (3 Columns) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div
                         v-for="doc in featuredDocuments"
                         :key="doc.id"
-                        class="bg-slate-50/70 rounded-3xl p-6 border border-slate-200/80 hover:bg-white hover:shadow-md hover:border-teal-600/40 transition-all flex flex-col justify-between"
+                        class="bg-slate-50/70 rounded-3xl p-6 border border-slate-200/80 hover:bg-white hover:shadow-md hover:border-teal-600/40 transition-all flex flex-col justify-between group"
                     >
                         <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="text-[11px] font-bold px-2.5 py-1 rounded-md bg-teal-100/70 text-teal-800">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-teal-100/70 text-teal-800 line-clamp-1">
                                     {{ doc.category_name }}
                                 </span>
-                                <span class="text-xs font-bold text-slate-400">
+                                <span class="text-xs font-bold text-slate-500 bg-white px-2 py-0.5 rounded-md border border-slate-200 shrink-0">
                                     Tahun {{ doc.year }}
                                 </span>
                             </div>
 
-                            <h3 class="text-base font-bold text-slate-900 leading-snug">
+                            <h3 class="text-base font-bold text-slate-900 leading-snug group-hover:text-teal-800 transition-colors line-clamp-2">
                                 {{ doc.title }}
                             </h3>
 
@@ -502,9 +516,10 @@ onUnmounted(() => {
                         </div>
 
                         <div class="pt-4 mt-4 border-t border-slate-200/60 flex items-center justify-between">
-                            <span class="text-xs text-slate-400">
-                                Ukuran: {{ doc.file_size }}
-                            </span>
+                            <div class="flex flex-col text-[11px] text-slate-400">
+                                <span>{{ doc.file_size }}</span>
+                                <span>{{ doc.downloads_count }}x diunduh</span>
+                            </div>
 
                             <a
                                 :href="`/dokumen/${doc.slug}/unduh`"
@@ -519,25 +534,29 @@ onUnmounted(() => {
             </div>
         </section>
 
-        <!-- Warta Pembangunan 6 Bidang -->
-        <section class="py-16 bg-slate-50 border-b border-slate-200/60">
-            <div class="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
+        <!-- Warta Pembangunan 6 Bidang (Magazine Cuplikan Style) -->
+        <section class="py-16 bg-slate-50 border-b border-slate-200/60 relative overflow-hidden">
+            <!-- Background Accent Texture -->
+            <div class="absolute inset-0 pointer-events-none opacity-25 bg-[radial-gradient(#0d9488_1px,transparent_1px)] [background-size:24px_24px]"></div>
+
+            <div class="relative max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                     <div>
-                        <span class="text-xs font-bold text-teal-800 uppercase tracking-wider block">
-                            Kilas Informasi Publik
-                        </span>
-                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100/70 border border-teal-200/80 text-[11px] font-bold text-teal-900 mb-2">
+                            <Newspaper class="w-3.5 h-3.5 text-teal-700" />
+                            <span>Kilas Informasi Publik • Cuplikan Editorial Majalah</span>
+                        </div>
+                        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                             Warta & Publikasi 6 Bidang
                         </h2>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-1">
-                            Informasi terkini pelaksanaan perencanaan pembangunan, riset terpadu, dan inovasi daerah.
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl">
+                            Informasi terkini pelaksanaan perencanaan pembangunan, riset terpadu, dan inovasi daerah dalam format cuplikan warta majalah daerah.
                         </p>
                     </div>
 
                     <Link
                         href="/berita"
-                        class="inline-flex items-center gap-1.5 text-xs font-bold text-teal-800 hover:text-teal-900 self-start sm:self-auto"
+                        class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-teal-50 border border-slate-200 hover:border-teal-300 text-xs font-bold text-teal-800 transition-all shadow-2xs self-start sm:self-auto"
                     >
                         <span>Arsip Seluruh Berita</span>
                         <ChevronRight class="w-4 h-4" />
@@ -545,85 +564,235 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Bidang Filter Tabs -->
-                <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs">
+                <div class="flex items-center gap-2 overflow-x-auto pb-2 text-xs scrollbar-thin">
                     <button
                         type="button"
-                        class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer"
-                        :class="activeBidang === 'semua' ? 'bg-teal-800 text-white shadow-xs' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+                        :class="activeBidang === 'semua' ? 'bg-teal-800 text-white shadow-sm ring-2 ring-teal-800/30' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'"
                         @click="activeBidang = 'semua'"
                     >
-                        Semua Bidang
+                        <span>Semua Bidang</span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-full" :class="activeBidang === 'semua' ? 'bg-teal-700 text-teal-100' : 'bg-slate-100 text-slate-500'">
+                            {{ latestNews.length }}
+                        </span>
                     </button>
                     <button
                         v-for="cat in categories"
                         :key="cat.id"
                         type="button"
-                        class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer"
-                        :class="activeBidang === cat.slug ? 'bg-teal-800 text-white shadow-xs' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'"
+                        class="px-4 py-2 rounded-xl font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5"
+                        :class="activeBidang === cat.slug ? 'bg-teal-800 text-white shadow-sm ring-2 ring-teal-800/30' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200/80'"
                         @click="activeBidang = cat.slug"
                     >
-                        {{ cat.code }} • {{ cat.name }}
+                        <span class="font-black" :class="activeBidang === cat.slug ? 'text-teal-200' : 'text-teal-700'">{{ cat.code }}</span>
+                        <span>•</span>
+                        <span>{{ cat.name }}</span>
                     </button>
                 </div>
 
-                <!-- News Cards Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <article
-                        v-for="art in filteredNews"
-                        :key="art.id"
-                        class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md hover:border-teal-600/40 transition-all flex flex-col justify-between group"
-                    >
-                        <div>
-                            <!-- Article Image Thumbnail -->
-                            <div class="relative w-full h-48 bg-slate-100 overflow-hidden">
+                <!-- Magazine Layout Showcase -->
+                <div v-if="filteredNews.length > 0" class="space-y-8">
+                    <!-- Featured Lead Story (Cuplikan Utama / Headline Magazine) -->
+                    <div v-if="leadNews" class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-sm hover:shadow-md transition-all group">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+                            <!-- Lead Image (7 cols) -->
+                            <div class="relative lg:col-span-7 h-72 sm:h-96 lg:h-auto min-h-[320px] bg-slate-100 overflow-hidden">
                                 <img
-                                    :src="art.featured_image || '/images/pringsewu_magazine_bg.jpg'"
-                                    :alt="art.title"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    loading="lazy"
+                                    :src="leadNews.featured_image || '/images/pringsewu_magazine_bg.jpg'"
+                                    :alt="leadNews.title"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                                 />
-                                <div class="absolute inset-0 bg-linear-to-t from-slate-950/70 via-transparent to-transparent opacity-60" />
-                                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-teal-900/90 text-teal-200 backdrop-blur-md border border-teal-500/30">
-                                    {{ art.category_code }}
-                                </span>
-                            </div>
-
-                            <div class="p-6 space-y-3">
-                                <div class="flex items-center justify-between text-[11px] text-slate-400">
-                                    <span class="flex items-center gap-1">
-                                        <Calendar class="w-3 h-3 text-teal-600" /> {{ art.published_at }}
+                                <div class="absolute inset-0 bg-linear-to-t from-slate-950/80 via-slate-950/20 to-transparent"></div>
+                                
+                                <div class="absolute top-4 left-4 flex flex-wrap items-center gap-2">
+                                    <span class="px-3 py-1 rounded-lg text-xs font-black uppercase tracking-wider bg-teal-800 text-white shadow-sm border border-teal-500/30">
+                                        {{ leadNews.category_code }} • {{ leadNews.category_name }}
                                     </span>
-                                    <span class="font-medium text-teal-800">
-                                        {{ art.category_name }}
+                                    <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold bg-amber-400/95 text-amber-950 shadow-sm flex items-center gap-1">
+                                        <Sparkles class="w-3 h-3" />
+                                        CUPLIKAN UTAMA
                                     </span>
                                 </div>
 
-                                <h3 class="text-base font-bold text-slate-900 leading-snug group-hover:text-teal-800 transition-colors line-clamp-2">
-                                    <Link :href="`/berita/${art.slug}`">
-                                        {{ art.title }}
-                                    </Link>
-                                </h3>
+                                <div class="absolute bottom-4 left-4 right-4 text-white flex items-center justify-between text-xs">
+                                    <span class="flex items-center gap-1.5 opacity-90">
+                                        <Calendar class="w-3.5 h-3.5 text-teal-300" /> {{ leadNews.published_at }}
+                                    </span>
+                                    <span class="flex items-center gap-1.5 opacity-90">
+                                        <Eye class="w-3.5 h-3.5 text-teal-300" /> {{ leadNews.views_count }} pembaca
+                                    </span>
+                                </div>
+                            </div>
 
-                                <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
-                                    {{ art.excerpt }}
-                                </p>
+                            <!-- Lead Narrative & Snippet (5 cols) -->
+                            <div class="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between bg-white">
+                                <div class="space-y-4">
+                                    <div class="flex items-center gap-2 text-xs font-bold text-teal-800">
+                                        <BookOpen class="w-4 h-4 text-teal-700" />
+                                        <span>Cuplikan Liputan Eksklusif</span>
+                                    </div>
+
+                                    <h3 class="text-xl sm:text-2xl font-black text-slate-900 leading-snug group-hover:text-teal-800 transition-colors">
+                                        <Link :href="`/berita/${leadNews.slug}`">
+                                            {{ leadNews.title }}
+                                        </Link>
+                                    </h3>
+
+                                    <div class="p-4 rounded-2xl bg-teal-50/50 border border-teal-100 text-slate-700 text-sm leading-relaxed relative">
+                                        <div class="text-[11px] font-bold text-teal-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                                            <span>Ringkasan Cuplikan:</span>
+                                        </div>
+                                        <p class="line-clamp-4">
+                                            {{ leadNews.excerpt }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                                    <span class="text-xs text-slate-400 flex items-center gap-1">
+                                        <Clock class="w-3.5 h-3.5" /> Est. 3 mnt baca
+                                    </span>
+
+                                    <Link
+                                        :href="`/berita/${leadNews.slug}`"
+                                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-teal-800 hover:bg-teal-900 text-white text-xs font-bold transition-all shadow-sm hover:shadow group/btn"
+                                    >
+                                        <span>Baca Cuplikan Selengkapnya</span>
+                                        <ArrowRight class="w-4 h-4 group-hover/btn:translate-x-0.5 transition-transform" />
+                                    </Link>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="px-6 pb-6 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-                            <span class="text-slate-400 text-[11px] flex items-center gap-1">
-                                <Eye class="w-3.5 h-3.5" /> {{ art.views_count }} pembaca
+                    <!-- Secondary Magazine Snippets (Cuplikan Berita Pendamping) -->
+                    <div v-if="secondaryNews.length > 0" class="space-y-4">
+                        <div class="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+                                Cuplikan Warta Bidang Pilihan
+                            </h4>
+                            <span class="text-xs text-slate-400 font-medium">
+                                {{ secondaryNews.length + moreNews.length }} Warta Lainnya
                             </span>
-
-                            <Link
-                                :href="`/berita/${art.slug}`"
-                                class="inline-flex items-center gap-1 font-bold text-teal-800 hover:text-teal-900"
-                            >
-                                <span>Selengkapnya</span>
-                                <ArrowRight class="w-3.5 h-3.5" />
-                            </Link>
                         </div>
-                    </article>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <article
+                                v-for="art in secondaryNews"
+                                :key="art.id"
+                                class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md hover:border-teal-600/40 transition-all flex flex-col justify-between group"
+                            >
+                                <div>
+                                    <div class="relative w-full h-48 bg-slate-100 overflow-hidden">
+                                        <img
+                                            :src="art.featured_image || '/images/pringsewu_magazine_bg.jpg'"
+                                            :alt="art.title"
+                                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                            loading="lazy"
+                                        />
+                                        <div class="absolute inset-0 bg-linear-to-t from-slate-950/70 via-transparent to-transparent opacity-60" />
+                                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-teal-900/90 text-teal-200 backdrop-blur-md border border-teal-500/30">
+                                            {{ art.category_code }}
+                                        </span>
+                                    </div>
+
+                                    <div class="p-5 space-y-2.5">
+                                        <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                            <span class="flex items-center gap-1">
+                                                <Calendar class="w-3 h-3 text-teal-600" /> {{ art.published_at }}
+                                            </span>
+                                            <span class="font-medium text-teal-800">
+                                                {{ art.category_name }}
+                                            </span>
+                                        </div>
+
+                                        <h4 class="text-sm sm:text-base font-bold text-slate-900 leading-snug group-hover:text-teal-800 transition-colors line-clamp-2">
+                                            <Link :href="`/berita/${art.slug}`">
+                                                {{ art.title }}
+                                            </Link>
+                                        </h4>
+
+                                        <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                                            {{ art.excerpt }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="px-5 pb-5 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+                                    <span class="text-slate-400 text-[11px] flex items-center gap-1">
+                                        <Eye class="w-3.5 h-3.5" /> {{ art.views_count }} pembaca
+                                    </span>
+
+                                    <Link
+                                        :href="`/berita/${art.slug}`"
+                                        class="inline-flex items-center gap-1 font-bold text-teal-800 hover:text-teal-900 group/read"
+                                    >
+                                        <span>Baca Cuplikan</span>
+                                        <ArrowRight class="w-3.5 h-3.5 group-hover/read:translate-x-0.5 transition-transform" />
+                                    </Link>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+
+                    <!-- More Magazine Stories Grid (if any) -->
+                    <div v-if="moreNews.length > 0" class="pt-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                            <article
+                                v-for="art in moreNews"
+                                :key="art.id"
+                                class="bg-white rounded-2xl p-4 border border-slate-200/80 hover:border-teal-500/40 hover:shadow-sm transition-all flex gap-4 group"
+                            >
+                                <div class="relative w-24 h-24 rounded-xl overflow-hidden shrink-0 bg-slate-100">
+                                    <img
+                                        :src="art.featured_image || '/images/pringsewu_magazine_bg.jpg'"
+                                        :alt="art.title"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                        loading="lazy"
+                                    />
+                                    <span class="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-teal-900/90 text-teal-200">
+                                        {{ art.category_code }}
+                                    </span>
+                                </div>
+
+                                <div class="flex flex-col justify-between flex-1 min-w-0">
+                                    <div>
+                                        <span class="text-[10px] text-slate-400 flex items-center gap-1">
+                                            <Calendar class="w-2.5 h-2.5 text-teal-600" /> {{ art.published_at }}
+                                        </span>
+                                        <h5 class="text-xs font-bold text-slate-900 group-hover:text-teal-800 line-clamp-2 leading-snug mt-1">
+                                            <Link :href="`/berita/${art.slug}`">
+                                                {{ art.title }}
+                                            </Link>
+                                        </h5>
+                                    </div>
+
+                                    <div class="flex items-center justify-between text-[11px] pt-1">
+                                        <span class="text-slate-400 text-[10px]">{{ art.views_count }} pembaca</span>
+                                        <Link :href="`/berita/${art.slug}`" class="font-bold text-teal-800 hover:text-teal-900 inline-flex items-center gap-0.5 text-xs">
+                                            <span>Cuplikan</span>
+                                            <ArrowRight class="w-3 h-3" />
+                                        </Link>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State if no articles in category -->
+                <div v-else class="text-center py-12 bg-white rounded-3xl border border-slate-200 p-8 space-y-3">
+                    <Newspaper class="w-12 h-12 text-slate-300 mx-auto" />
+                    <h3 class="text-base font-bold text-slate-700">Belum Ada Warta untuk Bidang Ini</h3>
+                    <p class="text-xs text-slate-500">Silakan pilih bidang lain atau kembali ke Semua Bidang.</p>
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-xl text-xs font-bold bg-teal-800 text-white"
+                        @click="activeBidang = 'semua'"
+                    >
+                        Lihat Semua Bidang
+                    </button>
                 </div>
             </div>
         </section>
