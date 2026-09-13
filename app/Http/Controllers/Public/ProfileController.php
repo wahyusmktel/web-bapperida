@@ -12,9 +12,71 @@ class ProfileController extends Controller
     /**
      * Display the official profile of BAPPERIDA Pringsewu.
      */
-    public function index(): Response
+    public function bapperida(): Response
     {
-        $officials = Official::where('is_active', true)
+        return Inertia::render('Public/Profile', [
+            'officials' => $this->getOfficials(),
+        ]);
+    }
+
+    /**
+     * Display Visi & Misi.
+     */
+    public function visiMisi(): Response
+    {
+        return Inertia::render('Public/Profile/VisiMisi');
+    }
+
+    /**
+     * Display Struktur Organisasi.
+     */
+    public function strukturOrganisasi(): Response
+    {
+        return Inertia::render('Public/Profile/StrukturOrganisasi', [
+            'officials' => $this->getOfficials(),
+        ]);
+    }
+
+    /**
+     * Display Tugas Pokok dan Fungsi.
+     */
+    public function tupoksi(): Response
+    {
+        return Inertia::render('Public/Profile/Tupoksi');
+    }
+
+    /**
+     * Display Profil Pejabat.
+     */
+    public function pejabat(): Response
+    {
+        return Inertia::render('Public/Profile/Pejabat', [
+            'officials' => $this->getOfficials(),
+        ]);
+    }
+
+    /**
+     * Display Statistik Pegawai.
+     */
+    public function statistikPegawai(): Response
+    {
+        return Inertia::render('Public/Profile/StatistikPegawai');
+    }
+
+    /**
+     * Display Kontak Kami.
+     */
+    public function kontak(): Response
+    {
+        return Inertia::render('Public/Profile/Kontak');
+    }
+
+    /**
+     * Helper to fetch active officials.
+     */
+    private function getOfficials()
+    {
+        return Official::where('is_active', true)
             ->orderBy('order')
             ->get()
             ->map(function ($off) {
@@ -26,9 +88,5 @@ class ProfileController extends Controller
                     'category_code' => $off->category_code,
                 ];
             });
-
-        return Inertia::render('Public/Profile', [
-            'officials' => $officials,
-        ]);
     }
 }

@@ -287,68 +287,92 @@ class BapperidaDataSeeder extends Seeder
             );
         }
 
-        // 6. Pejabat Struktural BAPPERIDA
+        // 6. Pejabat Struktural & Fungsional BAPPERIDA (Perbup No. 38/2025)
         $officials = [
             [
-                'name' => 'Imam Santiko Raharjo, S.Si., M.S.E.',
-                'nip' => '19750812 200212 1 003',
+                'name' => 'Dr. IMAM FATKUROJI, S.STP., M.IP',
+                'nip' => '19841110 200312 1 001',
                 'position' => 'Kepala BAPPERIDA Kabupaten Pringsewu',
-                'category_code' => 'PIMPINAN',
+                'category_code' => 'leadership',
                 'order' => 1,
                 'is_active' => true,
             ],
             [
-                'name' => 'Drs. Supriyanto, M.M.',
-                'nip' => '19710315 199803 1 005',
+                'name' => 'SITI RAHMAH, S.I.Kom., MM',
+                'nip' => '19850609 201001 2 014',
                 'position' => 'Sekretaris BAPPERIDA',
-                'category_code' => 'UMUM',
+                'category_code' => 'structural',
                 'order' => 2,
                 'is_active' => true,
             ],
             [
-                'name' => 'Ahmad Fathoni, S.T., M.T.',
-                'nip' => '19820510 200604 1 008',
-                'position' => 'Kepala Bidang PPE (Perencanaan Pengendalian & Evaluasi)',
-                'category_code' => 'PPE',
+                'name' => 'FITRI FAULA, S.I.Kom',
+                'nip' => '19880429 201001 2 006',
+                'position' => 'Kasubbag Umum dan Kepegawaian',
+                'category_code' => 'structural',
                 'order' => 3,
                 'is_active' => true,
             ],
             [
-                'name' => 'Siti Rohani, S.Sos., M.Si.',
-                'nip' => '19800922 200501 2 006',
-                'position' => 'Kepala Bidang PPM (Pemerintahan & Pembangunan Manusia)',
-                'category_code' => 'PPM',
+                'name' => 'EVY SURYANI SIMATUPANG, MM',
+                'nip' => '19830331 201101 2 006',
+                'position' => 'JF Perencana Ahli Muda',
+                'category_code' => 'functional',
                 'order' => 4,
                 'is_active' => true,
             ],
             [
-                'name' => 'Hendra Kurniawan, S.P., M.M.',
-                'nip' => '19790414 200801 1 012',
-                'position' => 'Kepala Bidang PSDA (Perekonomian & SDA)',
-                'category_code' => 'PSDA',
+                'name' => 'FEBBY SABEL SUPRIYATNA, SE, MM',
+                'nip' => '19860204 201001 2 021',
+                'position' => 'JF Analis Keuangan Pusat dan Daerah Ahli Muda',
+                'category_code' => 'functional',
                 'order' => 5,
                 'is_active' => true,
             ],
             [
-                'name' => 'Budi Prasetyo, S.T.',
-                'nip' => '19850120 201001 1 015',
-                'position' => 'Kepala Bidang IPW (Infrastruktur & Pengembangan Wilayah)',
-                'category_code' => 'IPW',
+                'name' => 'RARA SUKMA, ST., M.P.W.K',
+                'nip' => '19850724 201001 2 016',
+                'position' => 'Kepala Bidang PPE (Perencanaan, Pengendalian & Evaluasi)',
+                'category_code' => 'structural',
                 'order' => 6,
                 'is_active' => true,
             ],
             [
-                'name' => 'Dian Kusuma, S.Kom., M.T.I.',
-                'nip' => '19861105 201101 2 018',
-                'position' => 'Kepala Bidang RIDA (Riset & Inovasi Daerah)',
-                'category_code' => 'RIDA',
+                'name' => 'Ir. A. ADAM ALTHUSIUS, ST., MURP.',
+                'nip' => '19800422 201001 1 009',
+                'position' => 'Kepala Bidang IPW (Infrastruktur & Pengembangan Wilayah)',
+                'category_code' => 'structural',
                 'order' => 7,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'DEBIT ZULIANSYAH, ST',
+                'nip' => '19801012 201001 1 023',
+                'position' => 'Kepala Bidang PPM (Pemerintahan & Pembangunan Manusia)',
+                'category_code' => 'structural',
+                'order' => 8,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'Ir. ERWIN SONI, ST., MM',
+                'nip' => '19801208 201001 1 011',
+                'position' => 'Kepala Bidang PSDA (Perekonomian & SDA)',
+                'category_code' => 'structural',
+                'order' => 9,
+                'is_active' => true,
+            ],
+            [
+                'name' => 'FENNY APRILIA, S.Sos',
+                'nip' => '19840405 201001 2 032',
+                'position' => 'Kepala Bidang RIDA (Riset & Inovasi Daerah)',
+                'category_code' => 'structural',
+                'order' => 10,
                 'is_active' => true,
             ],
         ];
 
         foreach ($officials as $off) {
-            Official::firstOrCreate(['name' => $off['name']], $off);
+            Official::updateOrCreate(['nip' => $off['nip']], $off);
         }
     }
 }

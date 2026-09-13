@@ -14,7 +14,15 @@ use Illuminate\Support\Facades\Route;
 
 // Public portal routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/profil', [ProfileController::class, 'index'])->name('profile');
+// Public Profile Standalone Pages
+Route::get('/profil', [ProfileController::class, 'bapperida'])->name('profile');
+Route::get('/profil/bapperida', [ProfileController::class, 'bapperida'])->name('profile.bapperida');
+Route::get('/profil/visi-misi', [ProfileController::class, 'visiMisi'])->name('profile.visi-misi');
+Route::get('/profil/struktur-organisasi', [ProfileController::class, 'strukturOrganisasi'])->name('profile.struktur-organisasi');
+Route::get('/profil/tupoksi', [ProfileController::class, 'tupoksi'])->name('profile.tupoksi');
+Route::get('/profil/pejabat', [ProfileController::class, 'pejabat'])->name('profile.pejabat');
+Route::get('/profil/statistik-pegawai', [ProfileController::class, 'statistikPegawai'])->name('profile.statistik-pegawai');
+Route::get('/profil/kontak', [ProfileController::class, 'kontak'])->name('profile.kontak');
 
 // Public Documents
 Route::get('/dokumen', [PublicDocumentController::class, 'index'])->name('documents.index');

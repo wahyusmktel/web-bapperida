@@ -98,6 +98,33 @@ class PublicPortalTest extends TestCase
         );
     }
 
+    public function test_public_profile_subpages_render_successfully(): void
+    {
+        $this->get(route('profile.visi-misi'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/Profile/VisiMisi'));
+
+        $this->get(route('profile.struktur-organisasi'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/Profile/StrukturOrganisasi')->has('officials'));
+
+        $this->get(route('profile.tupoksi'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/Profile/Tupoksi'));
+
+        $this->get(route('profile.pejabat'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/Profile/Pejabat')->has('officials'));
+
+        $this->get(route('profile.statistik-pegawai'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/Profile/StatistikPegawai'));
+
+        $this->get(route('profile.kontak'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/Profile/Kontak'));
+    }
+
     public function test_public_services_page_renders_successfully(): void
     {
         $response = $this->get(route('services.index'));

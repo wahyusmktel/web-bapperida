@@ -13,8 +13,16 @@ import {
     Shield,
     ExternalLink,
     ChevronRight,
+    ChevronDown,
     ArrowUpRight,
     Search,
+    Building2,
+    Compass,
+    Network,
+    FileCheck,
+    Users,
+    BarChart3,
+    PhoneCall,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -26,6 +34,8 @@ defineProps<Props>();
 const page = usePage();
 const isScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
+const isProfileDropdownOpen = ref(false);
+const isMobileProfileOpen = ref(true);
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 20;
@@ -39,12 +49,14 @@ onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll);
 });
 
-const navigation = [
-    { name: 'Beranda', href: '/' },
-    { name: 'Profil', href: '/profil' },
-    { name: 'Dokumen Perencanaan', href: '/dokumen' },
-    { name: 'Berita 6 Bidang', href: '/berita' },
-    { name: 'Layanan & Aspirasi', href: '/layanan' },
+const profileSubMenus = [
+    { name: 'Profil Bapperida', href: '/profil/bapperida', desc: 'Sejarah pembentukan, regulasi, & ruang lingkup', icon: Building2 },
+    { name: 'Visi dan Misi', href: '/profil/visi-misi', desc: 'Arah haluan pembangunan daerah Pringsewu', icon: Compass },
+    { name: 'Struktur Organisasi', href: '/profil/struktur-organisasi', desc: 'Bagan tata kelola organisasi & 5 bidang teknis', icon: Network },
+    { name: 'Tugas Pokok dan Fungsi', href: '/profil/tupoksi', desc: 'Tupoksi Bapperida sesuai Perda No. 6 Tahun 2024', icon: FileCheck },
+    { name: 'Profil Pejabat', href: '/profil/pejabat', desc: 'Aparatur pimpinan perencana & pejabat eselon', icon: Users },
+    { name: 'Statistik Pegawai', href: '/profil/statistik-pegawai', desc: 'Data demografi & kualifikasi ASN Bapperida', icon: BarChart3 },
+    { name: 'Kontak Kami', href: '/profil/kontak', desc: 'Alamat kantor, peta, telepon, & kanal resmi', icon: PhoneCall },
 ];
 
 const externalLinks = [
@@ -105,21 +117,126 @@ const externalLinks = [
                     </div>
                 </Link>
 
-                <!-- Desktop Nav Items -->
+                <!-- Desktop Nav Items with Profile Sub-Menu Dropdown -->
                 <nav class="hidden lg:flex items-center gap-1">
-                    <template v-for="item in navigation" :key="item.name">
-                        <Link
-                            :href="item.href"
+                    <Link
+                        href="/"
+                        :class="[
+                            page.url === '/'
+                                ? 'text-teal-800 font-bold bg-teal-50/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
+                        ]"
+                    >
+                        Beranda
+                    </Link>
+
+                    <!-- Profil Menu with Dropdown Sub-Menu -->
+                    <div
+                        class="relative"
+                        @mouseenter="isProfileDropdownOpen = true"
+                        @mouseleave="isProfileDropdownOpen = false"
+                    >
+                        <button
+                            type="button"
+                            @click="isProfileDropdownOpen = !isProfileDropdownOpen"
                             :class="[
-                                page.url === item.href || (item.href !== '/' && page.url.startsWith(item.href))
+                                page.url.startsWith('/profil')
                                     ? 'text-teal-800 font-bold bg-teal-50/80'
                                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
-                                'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
+                                'px-3.5 py-2 rounded-xl text-xs transition-all duration-150 flex items-center gap-1.5 cursor-pointer',
                             ]"
                         >
-                            {{ item.name }}
-                        </Link>
-                    </template>
+                            <span>Profil</span>
+                            <ChevronDown
+                                class="w-3.5 h-3.5 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isProfileDropdownOpen }"
+                            />
+                        </button>
+
+                        <!-- Dropdown Sub-Menu Card -->
+                        <Transition
+                            enter-active-class="transition duration-200 ease-out"
+                            enter-from-class="opacity-0 translate-y-2 scale-95"
+                            enter-to-class="opacity-100 translate-y-0 scale-100"
+                            leave-active-class="transition duration-150 ease-in"
+                            leave-from-class="opacity-100 translate-y-0 scale-100"
+                            leave-to-class="opacity-0 translate-y-2 scale-95"
+                        >
+                            <div
+                                v-if="isProfileDropdownOpen"
+                                class="absolute left-0 top-full pt-2 z-50 w-72 sm:w-80"
+                            >
+                                <div class="bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/90 p-2 space-y-0.5">
+                                    <div class="px-3 py-1.5 border-b border-slate-100 mb-1">
+                                        <span class="text-[10px] font-bold text-teal-800 uppercase tracking-wider block">
+                                            Mengenal BAPPERIDA
+                                        </span>
+                                        <span class="text-[11px] text-slate-500">
+                                            Pemerintah Kabupaten Pringsewu
+                                        </span>
+                                    </div>
+
+                                    <template v-for="sub in profileSubMenus" :key="sub.name">
+                                        <Link
+                                            :href="sub.href"
+                                            class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-teal-50/80 transition-colors group/item"
+                                            :class="{ 'bg-teal-50 text-teal-900': page.url === sub.href }"
+                                            @click="isProfileDropdownOpen = false"
+                                        >
+                                            <div class="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 group-hover/item:bg-teal-700 group-hover/item:text-white flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                                                <component :is="sub.icon" class="w-3.5 h-3.5" />
+                                            </div>
+                                            <div class="space-y-0.5">
+                                                <div class="text-xs font-bold text-slate-900 group-hover/item:text-teal-800 transition-colors flex items-center gap-1.5">
+                                                    <span>{{ sub.name }}</span>
+                                                </div>
+                                                <p class="text-[10px] text-slate-500 leading-tight">
+                                                    {{ sub.desc }}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    </template>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
+
+                    <Link
+                        href="/dokumen"
+                        :class="[
+                            page.url.startsWith('/dokumen')
+                                ? 'text-teal-800 font-bold bg-teal-50/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
+                        ]"
+                    >
+                        Dokumen Perencanaan
+                    </Link>
+
+                    <Link
+                        href="/berita"
+                        :class="[
+                            page.url.startsWith('/berita')
+                                ? 'text-teal-800 font-bold bg-teal-50/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
+                        ]"
+                    >
+                        Berita 6 Bidang
+                    </Link>
+
+                    <Link
+                        href="/layanan"
+                        :class="[
+                            page.url.startsWith('/layanan')
+                                ? 'text-teal-800 font-bold bg-teal-50/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
+                        ]"
+                    >
+                        Layanan & Aspirasi
+                    </Link>
                 </nav>
 
                 <!-- Header Actions -->
@@ -161,10 +278,10 @@ const externalLinks = [
         <div
             :class="[
                 isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full',
-                'fixed inset-y-0 right-0 z-50 w-80 bg-white shadow-2xl p-6 transition-transform duration-300 ease-in-out lg:hidden flex flex-col justify-between',
+                'fixed inset-y-0 right-0 z-50 w-80 bg-white shadow-2xl p-6 transition-transform duration-300 ease-in-out lg:hidden flex flex-col justify-between overflow-y-auto',
             ]"
         >
-            <div class="space-y-6">
+            <div class="space-y-5">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                     <div class="flex items-center gap-2.5">
                         <div class="w-9 h-9 rounded-xl bg-teal-800 flex items-center justify-center text-white font-bold text-sm">
@@ -180,17 +297,68 @@ const externalLinks = [
                     </button>
                 </div>
 
-                <!-- Navigation List -->
+                <!-- Navigation List with Mobile Profil Accordion -->
                 <div class="space-y-1">
-                    <template v-for="item in navigation" :key="item.name">
-                        <Link
-                            :href="item.href"
-                            class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
-                            @click="isMobileMenuOpen = false"
+                    <Link
+                        href="/"
+                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        Beranda
+                    </Link>
+
+                    <!-- Mobile Profil Accordion -->
+                    <div class="space-y-1">
+                        <button
+                            type="button"
+                            @click="isMobileProfileOpen = !isMobileProfileOpen"
+                            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors cursor-pointer"
                         >
-                            {{ item.name }}
-                        </Link>
-                    </template>
+                            <span>Profil</span>
+                            <ChevronDown
+                                class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isMobileProfileOpen }"
+                            />
+                        </button>
+
+                        <div v-show="isMobileProfileOpen" class="pl-2 pr-1 py-1 space-y-1 bg-slate-50/80 rounded-xl">
+                            <template v-for="sub in profileSubMenus" :key="sub.name">
+                                <Link
+                                    :href="sub.href"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-teal-800 hover:bg-white transition-colors"
+                                    :class="{ 'text-teal-800 font-bold bg-white shadow-2xs': page.url === sub.href }"
+                                    @click="isMobileMenuOpen = false"
+                                >
+                                    <component :is="sub.icon" class="w-3.5 h-3.5 text-teal-700 shrink-0" />
+                                    <span>{{ sub.name }}</span>
+                                </Link>
+                            </template>
+                        </div>
+                    </div>
+
+                    <Link
+                        href="/dokumen"
+                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        Dokumen Perencanaan
+                    </Link>
+
+                    <Link
+                        href="/berita"
+                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        Berita 6 Bidang
+                    </Link>
+
+                    <Link
+                        href="/layanan"
+                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        Layanan & Aspirasi
+                    </Link>
                 </div>
 
                 <!-- External Links in Drawer -->

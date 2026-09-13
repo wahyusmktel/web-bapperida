@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import PublicLayout from '@/layouts/PublicLayout.vue';
 import {
@@ -17,10 +17,12 @@ import {
     CheckCircle2,
     ExternalLink,
     ChevronRight,
+    ChevronLeft,
     TrendingUp,
     Award,
     Building2,
     Compass,
+    MapPin,
 } from 'lucide-vue-next';
 
 interface DocumentItem {
@@ -136,116 +138,272 @@ const integratedPortals = [
     { name: 'e-Pajak Daerah', desc: 'Sistem informasi pengelolaan pendapatan daerah', href: 'https://epajak.pringsewukab.go.id/' },
     { name: 'CCTV Pantau Pringsewu', desc: 'Pemantauan titik lalu lintas & ruang publik', href: 'https://cctv.pringsewukab.go.id/' },
 ];
+
+interface HeroSlide {
+    id: number;
+    tag: string;
+    title: string;
+    highlight: string;
+    description: string;
+    landmark: string;
+    landmarkSubtitle: string;
+    landmarkBadge: string;
+    image: string;
+    primaryCta: { label: string; href: string };
+    secondaryCta: { label: string; href: string };
+    quickStat: { label: string; value: string; desc: string };
+}
+
+const slides: HeroSlide[] = [
+    {
+        id: 1,
+        tag: 'Pemerintah Kabupaten Pringsewu • BAPPERIDA',
+        title: 'Merencanakan Pembangunan,',
+        highlight: 'Menggerakkan Riset & Inovasi',
+        description:
+            'Portal resmi Badan Perencanaan Pembangunan, Riset dan Inovasi Daerah Kabupaten Pringsewu. Akses dokumen kebijakan daerah (RPJMD/RKPD), riset tematik, publikasi 6 bidang, dan pantau indeks capaian daerah.',
+        landmark: 'Tugu Selamat Datang Pringsewu',
+        landmarkSubtitle: 'Gerbang Ikonik Bambu Bermahkota Siger Emas Lampung',
+        landmarkBadge: 'Ikon Selamat Datang',
+        image: '/images/hero/hero_welcome_arch.jpg',
+        primaryCta: { label: 'Unduh Dokumen RKPD', href: '/dokumen' },
+        secondaryCta: { label: 'Layanan & Aspirasi', href: '/layanan' },
+        quickStat: { label: 'Indeks Inovasi Daerah', value: '62.45', desc: 'Sangat Inovatif' },
+    },
+    {
+        id: 2,
+        tag: 'Ketangguhan & Semangat Gotong Royong',
+        title: 'Harmoni Pembangunan Tangguh,',
+        highlight: 'Pringsewu Berprestasi Dunia',
+        description:
+            'Menumbuhkan pembangunan manusia unggul, penguatan ekonomi kerakyatan, serta ketangguhan daerah yang berdaya saing global terinspirasi kejayaan atlet angkat besi kebanggaan Pringsewu.',
+        landmark: 'Tugu Gajah Angkat Besi',
+        landmarkSubtitle: 'Monumen Simbol Kejayaan Atlet & Gotong Royong Pringsewu',
+        landmarkBadge: 'Ikon Prestasi Daerah',
+        image: '/images/hero/hero_tugu_gajah.jpg',
+        primaryCta: { label: 'Lihat Indeks Capaian', href: '#indeks-section' },
+        secondaryCta: { label: 'Publikasi Riset & Berita', href: '/berita' },
+        quickStat: { label: 'Daya Saing Daerah', value: '3.42', desc: 'Kategori Tinggi' },
+    },
+    {
+        id: 3,
+        tag: 'Infrastruktur Strategis & Lingkungan Lestari',
+        title: 'Pengelolaan Ruang & Ketahanan Pangan,',
+        highlight: 'Masa Depan Berkelanjutan',
+        description:
+            'Optimalisasi tata ruang terpadu, konservasi sumber daya air, dan kedaulatan pangan berkelanjutan melalui Bendungan Way Sekampung untuk kemakmuran generasi kini dan masa depan.',
+        landmark: 'Bendungan Way Sekampung',
+        landmarkSubtitle: 'Kedaulatan Irigasi Pertanian & Daya Air Kabupaten Pringsewu',
+        landmarkBadge: 'Proyek Strategis Nasional',
+        image: '/images/hero/hero_way_sekampung.jpg',
+        primaryCta: { label: 'Kajian Perencanaan', href: '/dokumen' },
+        secondaryCta: { label: 'Survei Kepuasan (IKM)', href: '/layanan' },
+        quickStat: { label: 'Pengelolaan Keuangan (IPKD)', value: '84.10', desc: 'Sangat Baik' },
+    },
+];
+
+const currentSlideIndex = ref(0);
+const isPaused = ref(false);
+let timer: ReturnType<typeof setInterval> | null = null;
+
+const currentSlide = computed(() => slides[currentSlideIndex.value]);
+
+const nextSlide = () => {
+    currentSlideIndex.value = (currentSlideIndex.value + 1) % slides.length;
+};
+
+const prevSlide = () => {
+    currentSlideIndex.value = (currentSlideIndex.value - 1 + slides.length) % slides.length;
+};
+
+const setSlide = (idx: number) => {
+    currentSlideIndex.value = idx;
+};
+
+const startTimer = () => {
+    stopTimer();
+    timer = setInterval(() => {
+        if (!isPaused.value) {
+            nextSlide();
+        }
+    }, 6500);
+};
+
+const stopTimer = () => {
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
+    }
+};
+
+onMounted(() => {
+    startTimer();
+});
+
+onUnmounted(() => {
+    stopTimer();
+});
 </script>
 
 <template>
     <Head title="Portal Resmi BAPPERIDA Kabupaten Pringsewu" />
 
     <PublicLayout>
-        <!-- Hero Section Asimetris Modern -->
-        <section class="relative overflow-hidden bg-white border-b border-slate-100 py-16 sm:py-24">
-            <!-- Subtle Radial Gradient Backgrounds -->
-            <div class="absolute top-0 right-0 w-1/2 h-full bg-radial from-teal-50/70 via-transparent to-transparent pointer-events-none" />
-            <div class="absolute -bottom-24 left-1/4 w-96 h-96 bg-amber-50/50 rounded-full blur-3xl pointer-events-none" />
+        <!-- Full Page Hero Slider Section (Pas Layar Laptop & Desktop Tanpa Perlu Scroll) -->
+        <section
+            class="relative w-full h-[calc(100vh-100px)] min-h-[500px] max-h-[680px] lg:max-h-[720px] flex items-center overflow-hidden bg-slate-950 text-white select-none border-b border-slate-800"
+            @mouseenter="isPaused = true"
+            @mouseleave="isPaused = false"
+        >
+            <!-- Background Slider Images (Prompt Crossfade + Smooth Ken Burns) -->
+            <div class="absolute inset-0 w-full h-full overflow-hidden">
+                <div
+                    v-for="(slide, index) in slides"
+                    :key="slide.id"
+                    class="absolute inset-0 w-full h-full transition-opacity duration-500 ease-out"
+                    :class="index === currentSlideIndex ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
+                >
+                    <img
+                        :src="slide.image"
+                        :alt="slide.landmark"
+                        class="w-full h-full object-cover object-center transition-transform duration-6000 ease-out"
+                        :class="index === currentSlideIndex ? 'scale-105' : 'scale-100'"
+                        loading="eager"
+                    />
+                </div>
+            </div>
 
-            <div class="max-w-7xl mx-auto px-4 sm:px-8 relative z-10">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                    <!-- Hero Text Content (7 cols) -->
-                    <div class="lg:col-span-7 space-y-6">
-                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200/80 text-xs font-bold text-teal-800 tracking-wide">
-                            <Sparkles class="w-3.5 h-3.5 text-teal-700" />
-                            <span>Pemerintah Kabupaten Pringsewu • BAPPERIDA</span>
-                        </div>
+            <!-- Left Contrast Overlay (Teks terbaca tajam & jelas) -->
+            <div class="absolute inset-0 bg-linear-to-r from-slate-950/95 via-slate-950/80 to-transparent z-10 pointer-events-none" />
 
-                        <h1 class="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.12]">
-                            Merencanakan Pembangunan, <span class="text-teal-800">Menggerakkan Riset</span> & Inovasi Daerah.
-                        </h1>
+            <!-- Right Semitransparent Overlay (Overlay terlihat sedikit jelas di sebelah kanan) -->
+            <div class="absolute top-0 right-0 bottom-0 w-full md:w-7/12 lg:w-1/2 bg-linear-to-l from-slate-950/80 via-slate-950/35 to-transparent z-10 pointer-events-none" />
 
-                        <p class="text-sm sm:text-base text-slate-600 leading-relaxed max-w-2xl font-normal">
-                            Portal resmi Badan Perencanaan Pembangunan, Riset dan Inovasi Daerah (BAPPERIDA) Kabupaten Pringsewu. Akses dokumen perencanaan (RPJMD/RKPD), riset strategis, warta 6 bidang, dan pantau indeks capaian daerah secara transparan.
-                        </p>
+            <!-- Top & Bottom Soft Gradient Fades -->
+            <div class="absolute inset-x-0 top-0 h-24 bg-linear-to-b from-slate-950/70 to-transparent z-10 pointer-events-none" />
+            <div class="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-slate-950 via-slate-950/50 to-transparent z-10 pointer-events-none" />
 
-                        <!-- Integrated Search Bar -->
-                        <form @submit.prevent="handleHeroSearch" class="max-w-xl">
-                            <div class="relative flex items-center bg-slate-50 border-2 border-slate-200/80 hover:border-teal-700/60 focus-within:border-teal-700 focus-within:bg-white rounded-2xl p-1.5 transition-all shadow-xs">
-                                <Search class="w-5 h-5 text-slate-400 ml-3 shrink-0" />
-                                <input
-                                    v-model="heroSearchQuery"
-                                    type="text"
-                                    placeholder="Cari dokumen RKPD, RPJMD, atau topik berita..."
-                                    class="w-full bg-transparent px-3 py-2 text-xs sm:text-sm text-slate-800 outline-none"
-                                />
-                                <button
-                                    type="submit"
-                                    class="px-5 py-2.5 rounded-xl text-xs font-bold text-white bg-teal-800 hover:bg-teal-900 active:scale-[0.98] transition-all shrink-0 cursor-pointer shadow-xs"
-                                >
-                                    Cari Data
-                                </button>
+            <!-- Slider Content Container -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-8 py-6 sm:py-8 lg:py-10 relative z-20 w-full">
+                <div class="max-w-3xl space-y-4 sm:space-y-5">
+                    <!-- Main Heading & Deskripsi dengan Animasi Smooth dari Kiri ke Kanan -->
+                    <div class="min-h-[110px] sm:min-h-[125px] flex flex-col justify-center overflow-hidden">
+                        <Transition name="hero-slide" mode="out-in">
+                            <div :key="currentSlide.id" class="space-y-2.5 sm:space-y-3">
+                                <h1 class="text-2xl sm:text-3xl lg:text-[36px] xl:text-[42px] font-black text-white tracking-tight leading-[1.16]">
+                                    {{ currentSlide.title }}
+                                    <span class="block text-teal-400 bg-linear-to-r from-teal-300 via-emerald-300 to-amber-300 bg-clip-text text-transparent">
+                                        {{ currentSlide.highlight }}
+                                    </span>
+                                </h1>
+
+                                <p class="text-xs sm:text-sm text-slate-200/90 leading-relaxed max-w-2xl font-normal drop-shadow-sm line-clamp-2 sm:line-clamp-3">
+                                    {{ currentSlide.description }}
+                                </p>
                             </div>
-                        </form>
-
-                        <!-- Quick Badges -->
-                        <div class="flex flex-wrap items-center gap-4 text-xs text-slate-500 pt-2">
-                            <span class="font-semibold text-slate-400">Pencarian Populer:</span>
-                            <Link href="/dokumen?search=RKPD" class="hover:text-teal-800 underline decoration-slate-300">RKPD 2026</Link>
-                            <Link href="/dokumen?search=RPJMD" class="hover:text-teal-800 underline decoration-slate-300">RPJMD 2025-2029</Link>
-                            <Link href="/dokumen?search=Stunting" class="hover:text-teal-800 underline decoration-slate-300">Kajian Stunting</Link>
-                            <Link href="/layanan" class="hover:text-teal-800 underline decoration-slate-300">Permohonan Data</Link>
-                        </div>
+                        </Transition>
                     </div>
 
-                    <!-- Hero Visual Card (5 cols) -->
-                    <div class="lg:col-span-5 space-y-4">
-                        <!-- Card 1: Prestasi Utama IID -->
-                        <div class="bg-linear-to-br from-teal-900 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-                            <div class="absolute -top-12 -right-12 w-40 h-40 bg-teal-500/20 rounded-full blur-2xl" />
-                            <div class="space-y-4 relative z-10">
-                                <div class="flex items-center justify-between">
-                                    <span class="text-[11px] font-bold uppercase tracking-wider text-teal-300">
-                                        Capaian Prestasi Daerah
-                                    </span>
-                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-teal-800 text-teal-200 border border-teal-600/30">
-                                        Tahun 2025
-                                    </span>
-                                </div>
-                                <div>
-                                    <span class="text-xs text-slate-300">Indeks Inovasi Daerah (IID)</span>
-                                    <div class="flex items-baseline gap-3 mt-1">
-                                        <span class="text-4xl sm:text-5xl font-black text-white tracking-tight">
-                                            62.45
-                                        </span>
-                                        <span class="inline-flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                            <Award class="w-3.5 h-3.5" /> Sangat Inovatif
-                                        </span>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-teal-100/70 pt-2 border-t border-teal-800/80">
-                                    Dianugerahi oleh Kementerian Dalam Negeri Republik Indonesia atas komitmen penguatan ekosistem riset dan kemudahan pelayanan warga Pringsewu.
-                                </p>
-                            </div>
-                        </div>
-
-                        <!-- Card 2: Quick Fact Pringsewu -->
-                        <div class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs flex items-center justify-between">
-                            <div class="space-y-1">
-                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">
-                                    Dokumen Perencanaan
-                                </span>
-                                <h3 class="text-base font-bold text-slate-900">
-                                    Transparansi Publik 100%
-                                </h3>
-                                <p class="text-xs text-slate-500">
-                                    Seluruh regulasi pembangunan daerah dapat diakses dan diunduh cuma-cuma.
-                                </p>
-                            </div>
-                            <Link
-                                href="/dokumen"
-                                class="w-10 h-10 rounded-2xl bg-teal-50 text-teal-800 flex items-center justify-center hover:bg-teal-800 hover:text-white transition-all shrink-0 ml-3"
+                    <!-- Integrated Search Bar -->
+                    <form @submit.prevent="handleHeroSearch" class="max-w-xl">
+                        <div class="relative flex items-center bg-slate-900/60 hover:bg-slate-900/80 focus-within:bg-slate-900 border-2 border-white/20 hover:border-teal-400/80 focus-within:border-teal-400 rounded-2xl p-1 sm:p-1.5 transition-all shadow-xl backdrop-blur-md">
+                            <Search class="w-4 h-4 sm:w-5 sm:h-5 text-teal-400 ml-3 shrink-0" />
+                            <input
+                                v-model="heroSearchQuery"
+                                type="text"
+                                placeholder="Cari dokumen RKPD, RPJMD, atau topik riset..."
+                                class="w-full bg-transparent px-2.5 py-1.5 text-xs sm:text-sm text-white placeholder-slate-300 outline-none"
+                            />
+                            <button
+                                type="submit"
+                                class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-teal-600 hover:bg-teal-500 active:scale-[0.98] transition-all shrink-0 cursor-pointer shadow-md flex items-center gap-1.5"
                             >
-                                <ArrowRight class="w-5 h-5" />
-                            </Link>
+                                <span>Cari Data</span>
+                                <ArrowRight class="w-3.5 h-3.5" />
+                            </button>
                         </div>
+                    </form>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-3 pt-0.5">
+                        <Link
+                            :href="currentSlide.primaryCta.href"
+                            class="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white bg-teal-600 hover:bg-teal-500 active:scale-95 transition-all shadow-lg cursor-pointer"
+                        >
+                            <span>{{ currentSlide.primaryCta.label }}</span>
+                            <ArrowRight class="w-4 h-4" />
+                        </Link>
+                        <Link
+                            :href="currentSlide.secondaryCta.href"
+                            class="inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold text-slate-200 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md active:scale-95 transition-all cursor-pointer"
+                        >
+                            <span>{{ currentSlide.secondaryCta.label }}</span>
+                        </Link>
                     </div>
+
+                    <!-- Popular Search Links -->
+                    <div class="flex flex-wrap items-center gap-2.5 sm:gap-3 text-[11px] sm:text-xs text-slate-300 pt-0.5">
+                        <span class="font-semibold text-slate-400">Pencarian Populer:</span>
+                        <Link href="/dokumen?search=RKPD" class="hover:text-teal-300 underline decoration-slate-500">RKPD 2026</Link>
+                        <Link href="/dokumen?search=RPJMD" class="hover:text-teal-300 underline decoration-slate-500">RPJMD 2025-2029</Link>
+                        <Link href="/dokumen?search=Stunting" class="hover:text-teal-300 underline decoration-slate-500">Kajian Stunting</Link>
+                        <Link href="/layanan" class="hover:text-teal-300 underline decoration-slate-500">Permohonan Data</Link>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Compact Corner Widget: Landmark Info & Controls (Pojok Kanan Bawah) -->
+            <div class="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 z-30 flex items-center gap-2.5 sm:gap-3 bg-slate-950/75 hover:bg-slate-950/90 backdrop-blur-xl border border-white/20 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-2xl shadow-2xl transition-all">
+                <!-- Landmark Info (Compact) -->
+                <div class="flex items-center gap-2.5 pr-3 border-r border-white/15 max-w-[200px] sm:max-w-xs">
+                    <div class="w-8 h-8 rounded-xl bg-teal-500/20 border border-teal-400/30 flex items-center justify-center shrink-0">
+                        <MapPin class="w-4 h-4 text-teal-300" />
+                    </div>
+                    <div class="truncate">
+                        <Transition name="corner-slide" mode="out-in">
+                            <div :key="currentSlide.id" class="truncate">
+                                <span class="text-[10px] font-bold text-teal-400 uppercase tracking-wider block leading-none">
+                                    {{ currentSlide.landmarkBadge }} • {{ currentSlideIndex + 1 }}/{{ slides.length }}
+                                </span>
+                                <span class="text-xs sm:text-sm font-bold text-white leading-tight block mt-1 truncate">
+                                    {{ currentSlide.landmark }}
+                                </span>
+                            </div>
+                        </Transition>
+                    </div>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex items-center gap-1.5">
+                    <button
+                        type="button"
+                        @click="prevSlide"
+                        aria-label="Slide Sebelumnya"
+                        class="w-8 h-8 rounded-xl bg-white/10 hover:bg-teal-600 text-white flex items-center justify-center transition-all active:scale-90 cursor-pointer"
+                    >
+                        <ChevronLeft class="w-4 h-4" />
+                    </button>
+                    <button
+                        type="button"
+                        @click="nextSlide"
+                        aria-label="Slide Berikutnya"
+                        class="w-8 h-8 rounded-xl bg-white/10 hover:bg-teal-600 text-white flex items-center justify-center transition-all active:scale-90 cursor-pointer"
+                    >
+                        <ChevronRight class="w-4 h-4" />
+                    </button>
+                </div>
+
+                <!-- Slide Indicators -->
+                <div class="hidden sm:flex items-center gap-1.5 pl-1">
+                    <button
+                        v-for="(s, idx) in slides"
+                        :key="s.id"
+                        type="button"
+                        @click="setSlide(idx)"
+                        :aria-label="'Pilih Slide ' + (idx + 1)"
+                        class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+                        :class="idx === currentSlideIndex ? 'w-5 bg-teal-400' : 'w-1.5 bg-white/30 hover:bg-white/60'"
+                    />
                 </div>
             </div>
         </section>
@@ -446,7 +604,7 @@ const integratedPortals = [
         </section>
 
         <!-- Indeks Pembangunan Daerah (Metrics Dashboard) -->
-        <section class="py-16 bg-white border-b border-slate-100">
+        <section id="indeks-section" class="py-16 bg-white border-b border-slate-100 scroll-mt-10">
             <div class="max-w-7xl mx-auto px-4 sm:px-8 space-y-10">
                 <div class="text-center max-w-2xl mx-auto space-y-2">
                     <span class="text-xs font-bold text-teal-800 uppercase tracking-wider">
@@ -522,3 +680,36 @@ const integratedPortals = [
         </section>
     </PublicLayout>
 </template>
+
+<style scoped>
+/* Transisi teks hero dari kiri ke kanan dengan kurva akselerasi halus */
+.hero-slide-enter-active {
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.45s ease-out;
+}
+.hero-slide-leave-active {
+    transition: transform 0.25s ease-in, opacity 0.2s ease-in;
+}
+.hero-slide-enter-from {
+    opacity: 0;
+    transform: translateX(-45px);
+}
+.hero-slide-leave-to {
+    opacity: 0;
+    transform: translateX(35px);
+}
+
+/* Transisi teks keterangan landmark pojok */
+.corner-slide-enter-active {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease-out;
+}
+.corner-slide-leave-active {
+    transition: opacity 0.2s ease-in;
+}
+.corner-slide-enter-from {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+.corner-slide-leave-to {
+    opacity: 0;
+}
+</style>
