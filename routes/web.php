@@ -5,10 +5,29 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\RegionalIndexController;
+use App\Http\Controllers\Public\HomeController;
+use App\Http\Controllers\Public\ProfileController;
+use App\Http\Controllers\Public\PublicDocumentController;
+use App\Http\Controllers\Public\PublicNewsController;
+use App\Http\Controllers\Public\PublicServiceController;
 use Illuminate\Support\Facades\Route;
 
 // Public portal routes
-Route::inertia('/', 'Welcome')->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/profil', [ProfileController::class, 'index'])->name('profile');
+
+// Public Documents
+Route::get('/dokumen', [PublicDocumentController::class, 'index'])->name('documents.index');
+Route::get('/dokumen/{slug}/unduh', [PublicDocumentController::class, 'download'])->name('documents.download');
+
+// Public News
+Route::get('/berita', [PublicNewsController::class, 'index'])->name('news.index');
+Route::get('/berita/{slug}', [PublicNewsController::class, 'show'])->name('news.show');
+
+// Public Services & Citizen Feedback
+Route::get('/layanan', [PublicServiceController::class, 'index'])->name('services.index');
+Route::post('/layanan/permohonan-data', [PublicServiceController::class, 'submitDataRequest'])->name('services.data-request');
+Route::post('/layanan/survei-ikm', [PublicServiceController::class, 'submitSurvey'])->name('services.survey');
 
 // Administrator routes
 Route::prefix('admin')->group(function () {
