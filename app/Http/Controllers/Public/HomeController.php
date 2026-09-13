@@ -119,10 +119,10 @@ class HomeController extends Controller
                 ->first();
 
             return [
-                'featuredDocuments' => $featuredDocuments,
-                'categories' => $categories,
-                'latestNews' => $latestNews,
-                'indexes' => $indexes,
+                'featuredDocuments' => $featuredDocuments->values()->all(),
+                'categories' => $categories->toArray(),
+                'latestNews' => $latestNews->values()->all(),
+                'indexes' => $indexes->values()->all(),
                 'headOfficial' => $head ? [
                     'name' => $head->name,
                     'position' => $head->position,
