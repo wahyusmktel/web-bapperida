@@ -1,2 +1,20 @@
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /admin/
+Disallow: /admin/*
+Disallow: /login
+Disallow: /register
+Disallow: /password/*
+Disallow: /api/*
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /admin/*
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /admin/*
+
+Sitemap: https://demo-bapperida.smktelkom-lpg.id/sitemap.xml

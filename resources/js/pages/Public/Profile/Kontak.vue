@@ -296,6 +296,49 @@ const socialMediaList = [
                     </div>
                 </div>
 
+                <!-- 3. SECTION: PETA LOKASI KANTOR (GOOGLE MAPS EMBED) -->
+                <div class="space-y-6 pt-8 border-t border-slate-200">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-bold text-teal-700 uppercase tracking-widest block">
+                                Peta Lokasi Kantor
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
+                                Denah & Navigasi BAPPERIDA Pringsewu
+                            </h2>
+                            <p class="text-xs sm:text-sm text-slate-600 mt-1">
+                                Kompleks Perkantoran Pemerintah Kabupaten Pringsewu, Jl. Dr. Sugiri Syarief, MPH, Pagelaran, Lampung.
+                            </p>
+                        </div>
+
+                        <a
+                            href="https://maps.app.goo.gl/dRhFrkzwfKyPEmFA7"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-teal-800 hover:bg-teal-900 text-white font-bold text-xs sm:text-sm shadow-sm shadow-teal-800/20 transition-all active:scale-98 shrink-0"
+                        >
+                            <MapPin class="w-4 h-4 text-amber-300" />
+                            <span>Buka di Google Maps Langsung</span>
+                            <ExternalLink class="w-3.5 h-3.5 opacity-80" />
+                        </a>
+                    </div>
+
+                    <!-- Responsive Google Maps Iframe Container -->
+                    <div class="rounded-3xl overflow-hidden bg-white border border-slate-200/90 shadow-lg p-2">
+                        <iframe
+                            src="https://maps.google.com/maps?q=-5.3453305,105.0045756&hl=id&z=17&output=embed"
+                            width="100%"
+                            height="420"
+                            style="border:0;"
+                            allowfullscreen="true"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            title="Lokasi Kantor BAPPERIDA Kabupaten Pringsewu"
+                            class="rounded-2xl w-full"
+                        />
+                    </div>
+                </div>
+
             </div>
         </main>
     </PublicLayout>

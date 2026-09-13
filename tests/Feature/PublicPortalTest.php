@@ -228,4 +228,67 @@ class PublicPortalTest extends TestCase
             'rating_satisfaction' => 5,
         ]);
     }
+
+    public function test_public_awards_page_renders_successfully(): void
+    {
+        $response = $this->get(route('awards.index'));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Public/Awards/Index')
+            ->has('awards.data')
+            ->has('years')
+            ->has('categories')
+            ->has('filters')
+        );
+    }
+
+    public function test_public_reports_pages_render_successfully(): void
+    {
+        $this->get(route('reports.iid'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Reports/Iid')
+                ->has('reports.data')
+                ->has('years')
+                ->has('meta')
+            );
+
+        $this->get(route('reports.idsd'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Reports/Idsd')
+                ->has('reports.data')
+                ->has('years')
+                ->has('meta')
+            );
+
+        $this->get(route('reports.ipkd'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Reports/Ipkd')
+                ->has('reports.data')
+                ->has('years')
+                ->has('meta')
+            );
+
+        $this->get(route('reports.lakip'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Reports/Lakip')
+                ->has('reports.data')
+                ->has('years')
+                ->has('meta')
+            );
+    }
+
+    public function test_public_sitemap_renders_valid_xml(): void
+    {
+        $response = $this->get('/sitemap.xml');
+
+        $response->assertOk();
+        $response->assertHeader('Content-Type', 'application/xml; charset=utf-8');
+        $this->assertStringContainsString('<?xml version="1.0" encoding="UTF-8"?>', $response->getContent());
+        $this->assertStringContainsString('<loc>', $response->getContent());
+    }
 }

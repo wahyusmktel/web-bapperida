@@ -28,6 +28,7 @@ import {
     TrendingUp,
     Layers,
     Activity,
+    Award as AwardIcon,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -45,6 +46,8 @@ const isDocumentDropdownOpen = ref(false);
 const isMobileDocumentOpen = ref(true);
 const isNewsDropdownOpen = ref(false);
 const isMobileNewsOpen = ref(true);
+const isReportDropdownOpen = ref(false);
+const isMobileReportOpen = ref(true);
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 20;
@@ -81,6 +84,13 @@ const newsSubMenus = [
     { name: 'Perekonomian dan Sumber Daya Alam (PSDA)', href: '/berita/psda', desc: 'Hilirisasi pertanian, pangan & UMKM Pringsewu', icon: TrendingUp },
     { name: 'Infrastruktur dan Pengembangan Wilayah (IPW)', href: '/berita/ipw', desc: 'Tata ruang RTRW, infrastruktur & utilitas kota', icon: Layers },
     { name: 'Riset dan Inovasi Daerah (RIDA)', href: '/berita/rida', desc: 'Ekosistem riset, IID, kompetisi & inovasi daerah', icon: Lightbulb },
+];
+
+const reportSubMenus = [
+    { name: 'Indeks Inovasi Daerah (IID)', href: '/laporan/iid', desc: 'Pengukuran IID & kematangan inovasi Kemendagri RI', icon: Lightbulb },
+    { name: 'Indeks Daya Saing Daerah (IDSD)', href: '/laporan/idsd', desc: 'Evaluasi produktivitas & pilar daya saing BRIN', icon: TrendingUp },
+    { name: 'Pengelolaan Keuangan Daerah (IPKD)', href: '/laporan/ipkd', desc: 'Transparansi fiskal & keselarasan RKPD-APBD', icon: BarChart3 },
+    { name: 'LAKIP / SAKIP', href: '/laporan/lakip', desc: 'Akuntabilitas kinerja instansi pemerintah predikat A', icon: FileCheck },
 ];
 
 const externalLinks = [
@@ -128,9 +138,11 @@ const externalLinks = [
             <div class="max-w-7xl mx-auto flex items-center justify-between">
                 <!-- Logo & Identity -->
                 <Link href="/" class="flex items-center gap-3 group">
-                    <div class="w-10 h-10 rounded-xl bg-teal-800 flex items-center justify-center text-white font-black text-lg shadow-sm group-hover:bg-teal-900 transition-colors tracking-tight">
-                        BP
-                    </div>
+                    <img
+                        src="/images/logo_pringsewu.png"
+                        alt="Logo Kabupaten Pringsewu"
+                        class="w-9 h-11 object-contain shrink-0 group-hover:scale-105 transition-transform"
+                    />
                     <div class="flex flex-col">
                         <span class="text-base font-black text-slate-900 tracking-tight leading-tight group-hover:text-teal-800 transition-colors">
                             BAPPERIDA
@@ -369,13 +381,93 @@ const externalLinks = [
                         </Transition>
                     </div>
 
+                    <!-- Menu Penghargaan -->
+                    <Link
+                        href="/penghargaan"
+                        :class="[
+                            page.url.startsWith('/penghargaan')
+                                ? 'text-teal-800 font-bold bg-teal-50/80'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                            'px-3 py-2 rounded-xl text-xs transition-all duration-150',
+                        ]"
+                    >
+                        Penghargaan
+                    </Link>
+
+                    <!-- Dropdown Menu Laporan -->
+                    <div class="relative" @mouseleave="isReportDropdownOpen = false">
+                        <button
+                            type="button"
+                            @click="isReportDropdownOpen = !isReportDropdownOpen"
+                            :class="[
+                                page.url.startsWith('/laporan')
+                                    ? 'text-teal-800 font-bold bg-teal-50/80'
+                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                                'px-3 py-2 rounded-xl text-xs transition-all duration-150 flex items-center gap-1 cursor-pointer',
+                            ]"
+                        >
+                            <span>Laporan</span>
+                            <ChevronDown
+                                class="w-3.5 h-3.5 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isReportDropdownOpen }"
+                            />
+                        </button>
+
+                        <!-- Dropdown Sub-Menu Card -->
+                        <Transition
+                            enter-active-class="transition duration-200 ease-out"
+                            enter-from-class="opacity-0 translate-y-2 scale-95"
+                            enter-to-class="opacity-100 translate-y-0 scale-100"
+                            leave-active-class="transition duration-150 ease-in"
+                            leave-from-class="opacity-100 translate-y-0 scale-100"
+                            leave-to-class="opacity-0 translate-y-2 scale-95"
+                        >
+                            <div
+                                v-if="isReportDropdownOpen"
+                                class="absolute left-0 top-full pt-2 z-50 w-72 sm:w-80"
+                            >
+                                <div class="bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/90 p-2 space-y-0.5">
+                                    <div class="px-3 py-1.5 border-b border-slate-100 mb-1">
+                                        <span class="text-[10px] font-bold text-teal-800 uppercase tracking-wider block">
+                                            Laporan & Akuntabilitas
+                                        </span>
+                                        <span class="text-[11px] text-slate-500">
+                                            Pengukuran Kinerja, Inovasi & Keuangan
+                                        </span>
+                                    </div>
+
+                                    <template v-for="sub in reportSubMenus" :key="sub.name">
+                                        <Link
+                                            :href="sub.href"
+                                            class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-teal-50/80 transition-colors group/item"
+                                            :class="{ 'bg-teal-50 text-teal-900': page.url === sub.href }"
+                                            @click="isReportDropdownOpen = false"
+                                        >
+                                            <div class="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 group-hover/item:bg-teal-700 group-hover/item:text-white flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                                                <component :is="sub.icon" class="w-3.5 h-3.5" />
+                                            </div>
+                                            <div class="space-y-0.5">
+                                                <div class="text-xs font-bold text-slate-900 group-hover/item:text-teal-800 transition-colors flex items-center gap-1.5">
+                                                    <span>{{ sub.name }}</span>
+                                                </div>
+                                                <p class="text-[10px] text-slate-500 leading-tight">
+                                                    {{ sub.desc }}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    </template>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
+
                     <Link
                         href="/layanan"
                         :class="[
                             page.url.startsWith('/layanan')
                                 ? 'text-teal-800 font-bold bg-teal-50/80'
                                 : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
-                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
+                            'px-3 py-2 rounded-xl text-xs transition-all duration-150',
                         ]"
                     >
                         Layanan & Aspirasi
@@ -427,9 +519,11 @@ const externalLinks = [
             <div class="space-y-5">
                 <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                     <div class="flex items-center gap-2.5">
-                        <div class="w-9 h-9 rounded-xl bg-teal-800 flex items-center justify-center text-white font-bold text-sm">
-                            BP
-                        </div>
+                        <img
+                            src="/images/logo_pringsewu.png"
+                            alt="Logo Kabupaten Pringsewu"
+                            class="w-8 h-10 object-contain drop-shadow-xs"
+                        />
                         <div class="flex flex-col">
                             <span class="text-xs font-bold text-slate-900">BAPPERIDA</span>
                             <span class="text-[10px] text-teal-800 font-semibold">Kab. Pringsewu</span>
@@ -545,6 +639,45 @@ const externalLinks = [
                         </div>
                     </div>
 
+                    <!-- Mobile Penghargaan Link -->
+                    <Link
+                        href="/penghargaan"
+                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
+                        :class="{ 'text-teal-800 font-bold bg-teal-50/80': page.url.startsWith('/penghargaan') }"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        Penghargaan
+                    </Link>
+
+                    <!-- Mobile Accordion Laporan -->
+                    <div class="space-y-1">
+                        <button
+                            type="button"
+                            @click="isMobileReportOpen = !isMobileReportOpen"
+                            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors cursor-pointer"
+                        >
+                            <span>Laporan</span>
+                            <ChevronDown
+                                class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isMobileReportOpen }"
+                            />
+                        </button>
+
+                        <div v-show="isMobileReportOpen" class="pl-2 pr-1 py-1 space-y-1 bg-slate-50/80 rounded-xl">
+                            <template v-for="sub in reportSubMenus" :key="sub.name">
+                                <Link
+                                    :href="sub.href"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-teal-800 hover:bg-white transition-colors"
+                                    :class="{ 'text-teal-800 font-bold bg-white shadow-2xs': page.url === sub.href }"
+                                    @click="isMobileMenuOpen = false"
+                                >
+                                    <component :is="sub.icon" class="w-3.5 h-3.5 text-teal-700 shrink-0" />
+                                    <span>{{ sub.name }}</span>
+                                </Link>
+                            </template>
+                        </div>
+                    </div>
+
                     <Link
                         href="/layanan"
                         class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
@@ -598,9 +731,11 @@ const externalLinks = [
                     <!-- Col 1: Instansi Brand -->
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-11 h-11 rounded-2xl bg-teal-700 flex items-center justify-center text-white font-black text-xl shadow-sm">
-                                BP
-                            </div>
+                            <img
+                                src="/images/logo_pringsewu.png"
+                                alt="Logo Kabupaten Pringsewu"
+                                class="w-10 h-12 object-contain drop-shadow-md"
+                            />
                             <div class="flex flex-col">
                                 <span class="text-base font-black text-white tracking-tight leading-tight">
                                     BAPPERIDA

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Award;
 use App\Models\DocumentCategory;
 use App\Models\NewsArticle;
 use App\Models\NewsCategory;
@@ -21,7 +22,7 @@ class BapperidaDataSeeder extends Seeder
     {
         $superAdmin = User::first();
 
-        // 1. Kategori Dokumen
+        // 1. Kategori Dokumen (Perencanaan, Kajian, Analisis & 4 Laporan Indeks)
         $docCategories = [
             [
                 'name' => 'Dokumen Perencanaan',
@@ -42,6 +43,26 @@ class BapperidaDataSeeder extends Seeder
                 'name' => 'Laporan Akuntabilitas',
                 'slug' => 'laporan-akuntabilitas',
                 'description' => 'Laporan Akuntabilitas Kinerja Instansi Pemerintah (LAKIP) dan evaluasi SAKIP.',
+            ],
+            [
+                'name' => 'Indeks Inovasi Daerah (IID)',
+                'slug' => 'laporan-iid',
+                'description' => 'Laporan pengukuran kematangan dan dampak ekosistem inovasi daerah oleh Kemendagri RI.',
+            ],
+            [
+                'name' => 'Indeks Daya Saing Daerah (IDSD)',
+                'slug' => 'laporan-idsd',
+                'description' => 'Laporan pengukuran produktivitas dan pilar daya saing daerah oleh BRIN.',
+            ],
+            [
+                'name' => 'Indeks Pengelolaan Keuangan Daerah (IPKD)',
+                'slug' => 'laporan-ipkd',
+                'description' => 'Laporan evaluasi transparansi, akuntabilitas, dan efisiensi fiskal keuangan daerah.',
+            ],
+            [
+                'name' => 'Laporan Akuntabilitas Kinerja Instansi Pemerintah (LAKIP)',
+                'slug' => 'laporan-lakip',
+                'description' => 'Laporan tahunan pertanggungjawaban kinerja instansi pemerintah (LAKIP / SAKIP).',
             ],
         ];
 
@@ -171,6 +192,195 @@ class BapperidaDataSeeder extends Seeder
                 'downloads_count' => 76,
                 'is_published' => true,
                 'published_at' => now()->subDays(5),
+            ],
+
+            // 4 Kategori Laporan Indeks & LAKIP Resmi
+            // Laporan IID
+            [
+                'category_id' => $savedDocCats['laporan-iid']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Hasil Pengukuran Indeks Inovasi Daerah (IID) Kabupaten Pringsewu Tahun 2025',
+                'slug' => Str::slug('Laporan Hasil Pengukuran Indeks Inovasi Daerah IID Kabupaten Pringsewu Tahun 2025'),
+                'year' => 2025,
+                'document_number' => 'Kepmendagri No. 100.4.3-128/2025',
+                'description' => 'Dokumen resmi hasil evaluasi dan penetapan Kabupaten Pringsewu berpredikat Sangat Inovatif dengan capaian skor 62,45 beserta rincian 58 proposal inovasi daerah.',
+                'file_name' => 'Laporan_Indeks_Inovasi_Daerah_Pringsewu_2025.pdf',
+                'file_size' => 9850000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 234,
+                'is_published' => true,
+                'published_at' => now()->subDays(15),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-iid']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Kematangan Ekosistem Riset dan Inovasi Daerah Pringsewu Tahun 2024',
+                'slug' => Str::slug('Laporan Kematangan Ekosistem Riset dan Inovasi Daerah Pringsewu Tahun 2024'),
+                'year' => 2024,
+                'document_number' => 'Laporan-IID-2024/RIDA',
+                'description' => 'Evaluasi penerapan inovasi tata kelola pemerintahan desa dan inovasi digital pelayanan publik Kabupaten Pringsewu tahun 2024.',
+                'file_name' => 'Laporan_IID_Pringsewu_2024.pdf',
+                'file_size' => 8400000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 189,
+                'is_published' => true,
+                'published_at' => now()->subMonths(12),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-iid']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Buku Profil Inovasi Pelayanan Publik dan Tata Kelola Pekon Pringsewu 2023',
+                'slug' => Str::slug('Buku Profil Inovasi Pelayanan Publik dan Tata Kelola Pekon Pringsewu 2023'),
+                'year' => 2023,
+                'document_number' => 'Buku-Inovasi-Pringsewu-2023',
+                'description' => 'Kompilasi inovasi unggulan berbasis kearifan lokal bambu, agribisnis pekon, dan kemudahan layanan administrasi kependudukan.',
+                'file_name' => 'Buku_Profil_Inovasi_Pringsewu_2023.pdf',
+                'file_size' => 12300000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 142,
+                'is_published' => true,
+                'published_at' => now()->subMonths(24),
+            ],
+
+            // Laporan IDSD
+            [
+                'category_id' => $savedDocCats['laporan-idsd']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Analisis Indeks Daya Saing Daerah (IDSD) Kabupaten Pringsewu Tahun 2025',
+                'slug' => Str::slug('Laporan Analisis Indeks Daya Saing Daerah IDSD Kabupaten Pringsewu Tahun 2025'),
+                'year' => 2025,
+                'document_number' => 'BRIN-IDSD/PSW/2025',
+                'description' => 'Laporan pengukuran komprehensif Badan Riset dan Inovasi Nasional (BRIN) dengan skor IDSD 3,42 (Kategori Tinggi) meliputi 4 komponen dan 12 pilar daya saing.',
+                'file_name' => 'Laporan_IDSD_Kabupaten_Pringsewu_2025.pdf',
+                'file_size' => 11200000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 178,
+                'is_published' => true,
+                'published_at' => now()->subDays(18),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-idsd']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Pengukuran Produktivitas dan Daya Saing Wilayah Pringsewu Tahun 2024',
+                'slug' => Str::slug('Laporan Pengukuran Produktivitas dan Daya Saing Wilayah Pringsewu Tahun 2024'),
+                'year' => 2024,
+                'document_number' => 'IDSD-PSW-2024',
+                'description' => 'Analisis komparatif pilar ekosistem bisnis, dinamika pasar tenaga kerja, dan adopsi TIK di Kabupaten Pringsewu.',
+                'file_name' => 'Laporan_IDSD_Pringsewu_2024.pdf',
+                'file_size' => 7600000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 155,
+                'is_published' => true,
+                'published_at' => now()->subMonths(11),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-idsd']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Kajian Pilar Lingkungan Pendukung Daya Saing Ekonomi Pringsewu 2023',
+                'slug' => Str::slug('Kajian Pilar Lingkungan Pendukung Daya Saing Ekonomi Pringsewu 2023'),
+                'year' => 2023,
+                'document_number' => 'IDSD-Kajian-2023',
+                'description' => 'Kajian mendalam stabilitas kelembagaan, infrastruktur dasar, dan kesiapan sektor ekonomi kerakyatan menghadapi pasar bebas.',
+                'file_name' => 'Kajian_Daya_Saing_Pringsewu_2023.pdf',
+                'file_size' => 6900000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 110,
+                'is_published' => true,
+                'published_at' => now()->subMonths(22),
+            ],
+
+            // Laporan IPKD
+            [
+                'category_id' => $savedDocCats['laporan-ipkd']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Hasil Pengukuran Indeks Pengelolaan Keuangan Daerah (IPKD) Tahun 2025',
+                'slug' => Str::slug('Laporan Hasil Pengukuran Indeks Pengelolaan Keuangan Daerah IPKD Tahun 2025'),
+                'year' => 2025,
+                'document_number' => 'Kepka-IPKD-PSW-2025',
+                'description' => 'Laporan evaluasi Kemendagri dan BPKP atas kualitas pengelolaan keuangan Pringsewu dengan skor 84,10 (Kategori Baik) mencakup keselarasan dokumen perencanaan dan penganggaran.',
+                'file_name' => 'Laporan_IPKD_Kabupaten_Pringsewu_2025.pdf',
+                'file_size' => 10500000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 205,
+                'is_published' => true,
+                'published_at' => now()->subDays(22),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-ipkd']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Evaluasi Keselarasan Anggaran dan Efisiensi Fiskal Daerah Pringsewu 2024',
+                'slug' => Str::slug('Laporan Evaluasi Keselarasan Anggaran dan Efisiensi Fiskal Daerah Pringsewu 2024'),
+                'year' => 2024,
+                'document_number' => 'IPKD-Fiskal-2024',
+                'description' => 'Pengukuran dimensi transparansi pengelolaan keuangan, penyerapan anggaran belanja modal, dan kondisi keuangan daerah.',
+                'file_name' => 'Evaluasi_Fiskal_IPKD_2024.pdf',
+                'file_size' => 8100000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 160,
+                'is_published' => true,
+                'published_at' => now()->subMonths(10),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-ipkd']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Keterbukaan dan Alokasi Belanja Modal Pembangunan Pringsewu 2023',
+                'slug' => Str::slug('Laporan Keterbukaan dan Alokasi Belanja Modal Pembangunan Pringsewu 2023'),
+                'year' => 2023,
+                'document_number' => 'IPKD-Transparansi-2023',
+                'description' => 'Laporan kinerja pemenuhan belanja wajib (mandatory spending) urusan pendidikan, kesehatan, dan infrastruktur.',
+                'file_name' => 'Laporan_Transparansi_IPKD_2023.pdf',
+                'file_size' => 7400000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 125,
+                'is_published' => true,
+                'published_at' => now()->subMonths(21),
+            ],
+
+            // Laporan LAKIP
+            [
+                'category_id' => $savedDocCats['laporan-lakip']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Akuntabilitas Kinerja Instansi Pemerintah (LAKIP) BAPPERIDA Tahun 2025',
+                'slug' => Str::slug('Laporan Akuntabilitas Kinerja Instansi Pemerintah LAKIP BAPPERIDA Tahun 2025'),
+                'year' => 2025,
+                'document_number' => 'LAKIP-BAPPERIDA-2025-FINAL',
+                'description' => 'Laporan resmi akuntabilitas kinerja BAPPERIDA Pringsewu dengan predikat A (Nilai 82,30) berdasarkan evaluasi KemenPAN-RB.',
+                'file_name' => 'LAKIP_BAPPERIDA_Pringsewu_2025.pdf',
+                'file_size' => 14800000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 312,
+                'is_published' => true,
+                'published_at' => now()->subDays(10),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-lakip']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Kinerja Instansi Pemerintah (LKjIP) BAPPERIDA Kabupaten Pringsewu Tahun 2024',
+                'slug' => Str::slug('Laporan Kinerja Instansi Pemerintah LKjIP BAPPERIDA Kabupaten Pringsewu Tahun 2024'),
+                'year' => 2024,
+                'document_number' => 'LKjIP-BAPPERIDA-2024',
+                'description' => 'Pertanggungjawaban sasaran strategis, efisiensi pagu anggaran, serta capaian indikator kinerja utama Bapperida tahun 2024.',
+                'file_name' => 'LKjIP_BAPPERIDA_Pringsewu_2024.pdf',
+                'file_size' => 11900000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 220,
+                'is_published' => true,
+                'published_at' => now()->subMonths(11),
+            ],
+            [
+                'category_id' => $savedDocCats['laporan-lakip']->id,
+                'user_id' => $superAdmin?->id,
+                'title' => 'Laporan Evaluasi Perjanjian Kinerja dan Capaian Target Renstra BAPPERIDA 2023',
+                'slug' => Str::slug('Laporan Evaluasi Perjanjian Kinerja dan Capaian Target Renstra BAPPERIDA 2023'),
+                'year' => 2023,
+                'document_number' => 'LAKIP-PK-2023',
+                'description' => 'Realisasi perjanjian kinerja aparatur perencana dan capaian target rencana strategis lima tahunan Bapperida.',
+                'file_name' => 'Laporan_PK_LAKIP_2023.pdf',
+                'file_size' => 9100000,
+                'file_mime' => 'application/pdf',
+                'downloads_count' => 175,
+                'is_published' => true,
+                'published_at' => now()->subMonths(23),
             ],
         ];
 
@@ -517,6 +727,110 @@ class BapperidaDataSeeder extends Seeder
 
         foreach ($officials as $off) {
             Official::updateOrCreate(['nip' => $off['nip']], $off);
+        }
+
+        // 7. Prestasi & Penghargaan Daerah (Award Showcase)
+        $awards = [
+            [
+                'name' => 'Penghargaan Pembangunan Daerah (PPD) Terbaik I Tingkat Provinsi Lampung',
+                'slug' => Str::slug('Penghargaan Pembangunan Daerah PPD Terbaik I Tingkat Provinsi Lampung'),
+                'year' => 2025,
+                'award_date' => '2025-04-18',
+                'category' => 'Perencanaan Pembangunan',
+                'organizer' => 'Kementerian PPN / Bappenas & Pemprov Lampung',
+                'description' => 'Apresiasi tertinggi atas keterpaduan, konsistensi, dan inovasi perencanaan pembangunan daerah dalam penyusunan RKPD Kabupaten Pringsewu yang selaras dengan sasaran strategis nasional.',
+                'image_path' => '/images/awards/award_ppd_pringsewu.jpg',
+                'order' => 1,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'Innovative Government Award (IGA) - Predikat Sangat Inovatif',
+                'slug' => Str::slug('Innovative Government Award IGA Predikat Sangat Inovatif'),
+                'year' => 2025,
+                'award_date' => '2025-12-12',
+                'category' => 'Inovasi Daerah',
+                'organizer' => 'Kementerian Dalam Negeri Republik Indonesia (BSKDN)',
+                'description' => 'Penghargaan nasional atas capaian skor kematangan indeks inovasi daerah (IID) 62,45 melalui penerapan puluhan aplikasi layanan publik dan tata kelola pemerintahan desa berbasis digital.',
+                'image_path' => '/images/awards/award_iga_pringsewu.jpg',
+                'order' => 2,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'Akuntabilitas Kinerja Instansi Pemerintah (SAKIP Award) Predikat A',
+                'slug' => Str::slug('Akuntabilitas Kinerja Instansi Pemerintah SAKIP Award Predikat A'),
+                'year' => 2025,
+                'award_date' => '2025-10-06',
+                'category' => 'Akuntabilitas Kinerja',
+                'organizer' => 'Kementerian Pendayagunaan Aparatur Negara dan Reformasi Birokrasi (KemenPAN-RB)',
+                'description' => 'Pengakuan atas keberhasilan BAPPERIDA dalam efisiensi penggunaan anggaran berbasis kinerja, konsistensi pohon kinerja indikator makro, dan akuntabilitas tata kelola birokrasi.',
+                'image_path' => '/images/awards/award_ppd_pringsewu.jpg',
+                'order' => 3,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'Penghargaan Kinerja Penurunan Prevalensi Stunting Terbaik',
+                'slug' => Str::slug('Penghargaan Kinerja Penurunan Prevalensi Stunting Terbaik'),
+                'year' => 2025,
+                'award_date' => '2025-08-20',
+                'category' => 'Pembangunan Manusia',
+                'organizer' => 'BKKBN & Tim Percepatan Penurunan Stunting (TPPS) Pusat',
+                'description' => 'Apresiasi komitmen konvergensi lintas sektor intervensi gizi spesifik dan sensitif di 126 pekon dan 5 kelurahan se-Kabupaten Pringsewu menuju zero new stunting.',
+                'image_path' => '/images/awards/award_iga_pringsewu.jpg',
+                'order' => 4,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'Opini Wajar Tanpa Pengecualian (WTP) 9 Kali Berturut-turut',
+                'slug' => Str::slug('Opini Wajar Tanpa Pengecualian WTP 9 Kali Berturut turut'),
+                'year' => 2024,
+                'award_date' => '2024-05-15',
+                'category' => 'Pengelolaan Keuangan',
+                'organizer' => 'Badan Pemeriksa Keuangan Republik Indonesia (BPK RI)',
+                'description' => 'Opini audit tertinggi atas Laporan Keuangan Pemerintah Daerah (LKPD) yang menunjukkan transparansi, kepatuhan regulasi, dan akurasi pencatatan aset daerah.',
+                'image_path' => '/images/awards/award_ppd_pringsewu.jpg',
+                'order' => 5,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'TPID Award - Tim Pengendalian Inflasi Daerah Berprestasi Kawasan Sumatera',
+                'slug' => Str::slug('TPID Award Tim Pengendalian Inflasi Daerah Berprestasi Kawasan Sumatera'),
+                'year' => 2024,
+                'award_date' => '2024-06-14',
+                'category' => 'Daya Saing & Perekonomian',
+                'organizer' => 'Kementerian Koordinator Bidang Perekonomian & Bank Indonesia',
+                'description' => 'Penghargaan atas inovasi penguatan rantai pasok pangan lokal, operasi pasar murah terpadu, dan kestabilan inflasi daerah yang terjaga di batas aman.',
+                'image_path' => '/images/awards/award_iga_pringsewu.jpg',
+                'order' => 6,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'Peringkat I Indeks Daya Saing Daerah (IDSD) Klaster Kabupaten Se-Provinsi Lampung',
+                'slug' => Str::slug('Peringkat I Indeks Daya Saing Daerah IDSD Klaster Kabupaten Se Provinsi Lampung'),
+                'year' => 2024,
+                'award_date' => '2024-11-28',
+                'category' => 'Daya Saing & Perekonomian',
+                'organizer' => 'Badan Riset dan Inovasi Nasional (BRIN)',
+                'description' => 'Capaian pilar produktivitas tenaga kerja, infrastruktur pendukung ekonomi kerakyatan, dan kemudahan berusaha bagi sentra agribisnis dan UMKM Pringsewu.',
+                'image_path' => '/images/awards/award_ppd_pringsewu.jpg',
+                'order' => 7,
+                'is_published' => true,
+            ],
+            [
+                'name' => 'Anugerah Keterbukaan Informasi Publik (KIP) Kategori Informatif',
+                'slug' => Str::slug('Anugerah Keterbukaan Informasi Publik KIP Kategori Informatif'),
+                'year' => 2023,
+                'award_date' => '2023-12-05',
+                'category' => 'Tata Kelola Pemerintahan',
+                'organizer' => 'Komisi Informasi Provinsi Lampung',
+                'description' => 'Penghargaan tertinggi atas kepatuhan standar layanan informasi publik berkala dan keterbukaan akses dokumen perencanaan melalui portal resmi daerah.',
+                'image_path' => '/images/awards/award_iga_pringsewu.jpg',
+                'order' => 8,
+                'is_published' => true,
+            ],
+        ];
+
+        foreach ($awards as $awd) {
+            Award::firstOrCreate(['slug' => $awd['slug']], $awd);
         }
     }
 }

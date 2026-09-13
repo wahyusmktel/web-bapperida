@@ -97,6 +97,15 @@ const filteredNews = computed(() => {
     return props.latestNews.filter((n) => n.category_slug === activeBidang.value);
 });
 
+const getIndexReportUrl = (code: string) => {
+    const c = (code || '').toUpperCase();
+    if (c === 'IID') return '/laporan/iid';
+    if (c === 'IDSD') return '/laporan/idsd';
+    if (c === 'IPKD') return '/laporan/ipkd';
+    if (c === 'SAKIP' || c === 'LAKIP') return '/laporan/lakip';
+    return '/laporan/iid';
+};
+
 const externalServices = [
     {
         name: 'Permohonan Data & Informasi',
@@ -562,32 +571,48 @@ onUnmounted(() => {
                     <article
                         v-for="art in filteredNews"
                         :key="art.id"
-                        class="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                        class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-xs hover:shadow-md hover:border-teal-600/40 transition-all flex flex-col justify-between group"
                     >
-                        <div class="space-y-3">
-                            <div class="flex items-center justify-between">
-                                <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold uppercase tracking-wider bg-teal-50 text-teal-800 border border-teal-200/60">
+                        <div>
+                            <!-- Article Image Thumbnail -->
+                            <div class="relative w-full h-48 bg-slate-100 overflow-hidden">
+                                <img
+                                    :src="art.featured_image || '/images/pringsewu_magazine_bg.jpg'"
+                                    :alt="art.title"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                    loading="lazy"
+                                />
+                                <div class="absolute inset-0 bg-linear-to-t from-slate-950/70 via-transparent to-transparent opacity-60" />
+                                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase tracking-wider bg-teal-900/90 text-teal-200 backdrop-blur-md border border-teal-500/30">
                                     {{ art.category_code }}
-                                </span>
-                                <span class="text-[11px] text-slate-400 flex items-center gap-1">
-                                    <Calendar class="w-3 h-3" /> {{ art.published_at }}
                                 </span>
                             </div>
 
-                            <h3 class="text-base font-bold text-slate-900 leading-snug group-hover:text-teal-800 transition-colors">
-                                <Link :href="`/berita/${art.slug}`">
-                                    {{ art.title }}
-                                </Link>
-                            </h3>
+                            <div class="p-6 space-y-3">
+                                <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                    <span class="flex items-center gap-1">
+                                        <Calendar class="w-3 h-3 text-teal-600" /> {{ art.published_at }}
+                                    </span>
+                                    <span class="font-medium text-teal-800">
+                                        {{ art.category_name }}
+                                    </span>
+                                </div>
 
-                            <p class="text-xs text-slate-600 line-clamp-3 leading-relaxed">
-                                {{ art.excerpt }}
-                            </p>
+                                <h3 class="text-base font-bold text-slate-900 leading-snug group-hover:text-teal-800 transition-colors line-clamp-2">
+                                    <Link :href="`/berita/${art.slug}`">
+                                        {{ art.title }}
+                                    </Link>
+                                </h3>
+
+                                <p class="text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                                    {{ art.excerpt }}
+                                </p>
+                            </div>
                         </div>
 
-                        <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                        <div class="px-6 pb-6 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
                             <span class="text-slate-400 text-[11px] flex items-center gap-1">
-                                <Eye class="w-3 h-3" /> {{ art.views_count }} pembaca
+                                <Eye class="w-3.5 h-3.5" /> {{ art.views_count }} pembaca
                             </span>
 
                             <Link
@@ -622,28 +647,40 @@ onUnmounted(() => {
                     <div
                         v-for="idx in indexes"
                         :key="idx.id"
-                        class="bg-slate-50 rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:bg-white hover:shadow-md transition-all text-center space-y-4"
+                        class="bg-slate-50 hover:bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs hover:shadow-md hover:border-teal-600/40 transition-all text-center flex flex-col justify-between group"
                     >
-                        <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-teal-100 text-teal-800 inline-block">
-                            {{ idx.code }} • {{ idx.year }}
-                        </span>
-
-                        <h3 class="text-sm font-bold text-slate-900 leading-snug min-h-[40px] flex items-center justify-center">
-                            {{ idx.name }}
-                        </h3>
-
-                        <div class="space-y-1">
-                            <span class="text-4xl font-black text-slate-900 tracking-tight block">
-                                {{ idx.score }}
+                        <div class="space-y-4">
+                            <span class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-teal-100 text-teal-800 inline-block">
+                                {{ idx.code }} • {{ idx.year }}
                             </span>
-                            <span class="inline-block text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
-                                {{ idx.predicate }}
-                            </span>
+
+                            <h3 class="text-sm font-bold text-slate-900 leading-snug min-h-[40px] flex items-center justify-center group-hover:text-teal-900 transition-colors">
+                                {{ idx.name }}
+                            </h3>
+
+                            <div class="space-y-1">
+                                <span class="text-4xl font-black text-slate-900 tracking-tight block">
+                                    {{ idx.score }}
+                                </span>
+                                <span class="inline-block text-xs font-bold px-3 py-1 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                                    {{ idx.predicate }}
+                                </span>
+                            </div>
+
+                            <p class="text-[11px] text-slate-400 pt-3 border-t border-slate-200/60 leading-tight">
+                                Penilai: {{ idx.evaluator }}
+                            </p>
                         </div>
 
-                        <p class="text-[11px] text-slate-400 pt-3 border-t border-slate-200/60 leading-tight">
-                            Penilai: {{ idx.evaluator }}
-                        </p>
+                        <div class="pt-4 mt-4 border-t border-slate-100">
+                            <Link
+                                :href="getIndexReportUrl(idx.code)"
+                                class="w-full inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl text-xs font-bold text-teal-800 bg-teal-50 hover:bg-teal-700 hover:text-white transition-all shadow-2xs"
+                            >
+                                <span>Lihat Laporan & Data</span>
+                                <ArrowRight class="w-3.5 h-3.5" />
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
