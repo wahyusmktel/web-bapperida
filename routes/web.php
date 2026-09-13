@@ -24,12 +24,21 @@ Route::get('/profil/pejabat', [ProfileController::class, 'pejabat'])->name('prof
 Route::get('/profil/statistik-pegawai', [ProfileController::class, 'statistikPegawai'])->name('profile.statistik-pegawai');
 Route::get('/profil/kontak', [ProfileController::class, 'kontak'])->name('profile.kontak');
 
-// Public Documents
+// Public Documents (Repository & Standalone Category Pages)
 Route::get('/dokumen', [PublicDocumentController::class, 'index'])->name('documents.index');
+Route::get('/dokumen/perencanaan', [PublicDocumentController::class, 'perencanaan'])->name('documents.perencanaan');
+Route::get('/dokumen/kajian', [PublicDocumentController::class, 'kajian'])->name('documents.kajian');
+Route::get('/dokumen/analisis', [PublicDocumentController::class, 'analisis'])->name('documents.analisis');
 Route::get('/dokumen/{slug}/unduh', [PublicDocumentController::class, 'download'])->name('documents.download');
 
-// Public News
+// Public News (Magazine Hub & Standalone Bidang Pages)
 Route::get('/berita', [PublicNewsController::class, 'index'])->name('news.index');
+Route::get('/berita/umum', [PublicNewsController::class, 'umum'])->name('news.umum');
+Route::get('/berita/ppe', [PublicNewsController::class, 'ppe'])->name('news.ppe');
+Route::get('/berita/ppm', [PublicNewsController::class, 'ppm'])->name('news.ppm');
+Route::get('/berita/psda', [PublicNewsController::class, 'psda'])->name('news.psda');
+Route::get('/berita/ipw', [PublicNewsController::class, 'ipw'])->name('news.ipw');
+Route::get('/berita/rida', [PublicNewsController::class, 'rida'])->name('news.rida');
 Route::get('/berita/{slug}', [PublicNewsController::class, 'show'])->name('news.show');
 
 // Public Services & Citizen Feedback

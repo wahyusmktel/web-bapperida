@@ -23,6 +23,11 @@ import {
     Users,
     BarChart3,
     PhoneCall,
+    BookOpen,
+    Lightbulb,
+    TrendingUp,
+    Layers,
+    Activity,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -36,6 +41,10 @@ const isScrolled = ref(false);
 const isMobileMenuOpen = ref(false);
 const isProfileDropdownOpen = ref(false);
 const isMobileProfileOpen = ref(true);
+const isDocumentDropdownOpen = ref(false);
+const isMobileDocumentOpen = ref(true);
+const isNewsDropdownOpen = ref(false);
+const isMobileNewsOpen = ref(true);
 
 const handleScroll = () => {
     isScrolled.value = window.scrollY > 20;
@@ -57,6 +66,21 @@ const profileSubMenus = [
     { name: 'Profil Pejabat', href: '/profil/pejabat', desc: 'Aparatur pimpinan perencana & pejabat eselon', icon: Users },
     { name: 'Statistik Pegawai', href: '/profil/statistik-pegawai', desc: 'Data demografi & kualifikasi ASN Bapperida', icon: BarChart3 },
     { name: 'Kontak Kami', href: '/profil/kontak', desc: 'Alamat kantor, peta, telepon, & kanal resmi', icon: PhoneCall },
+];
+
+const documentSubMenus = [
+    { name: 'Dokumen Perencanaan', href: '/dokumen/perencanaan', desc: 'RPJPD, RPJMD, RKPD, Renstra & Renja daerah', icon: BookOpen },
+    { name: 'Dokumen Kajian', href: '/dokumen/kajian', desc: 'Naskah akademik, riset kebijakan & kelayakan program', icon: Sparkles },
+    { name: 'Dokumen Analisis', href: '/dokumen/analisis', desc: 'Analisis ekonomi makro, statistik & spasial lingkungan', icon: BarChart3 },
+];
+
+const newsSubMenus = [
+    { name: 'Umum', href: '/berita/umum', desc: 'Kesekretariatan, kepegawaian, & tata usaha umum', icon: Building2 },
+    { name: 'Perencanaan Pengendalian dan Evaluasi (PPE)', href: '/berita/ppe', desc: 'RPJPD, RPJMD, RKPD & evaluasi pembangunan', icon: Activity },
+    { name: 'Pemerintahan dan Pembangunan Manusia (PPM)', href: '/berita/ppm', desc: 'Pendidikan, penanganan stunting & kemiskinan', icon: Users },
+    { name: 'Perekonomian dan Sumber Daya Alam (PSDA)', href: '/berita/psda', desc: 'Hilirisasi pertanian, pangan & UMKM Pringsewu', icon: TrendingUp },
+    { name: 'Infrastruktur dan Pengembangan Wilayah (IPW)', href: '/berita/ipw', desc: 'Tata ruang RTRW, infrastruktur & utilitas kota', icon: Layers },
+    { name: 'Riset dan Inovasi Daerah (RIDA)', href: '/berita/rida', desc: 'Ekosistem riset, IID, kompetisi & inovasi daerah', icon: Lightbulb },
 ];
 
 const externalLinks = [
@@ -202,29 +226,148 @@ const externalLinks = [
                         </Transition>
                     </div>
 
-                    <Link
-                        href="/dokumen"
-                        :class="[
-                            page.url.startsWith('/dokumen')
-                                ? 'text-teal-800 font-bold bg-teal-50/80'
-                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
-                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
-                        ]"
-                    >
-                        Dokumen Perencanaan
-                    </Link>
+                    <!-- Dropdown Menu Dokumen -->
+                    <div class="relative" @mouseleave="isDocumentDropdownOpen = false">
+                        <button
+                            type="button"
+                            @click="isDocumentDropdownOpen = !isDocumentDropdownOpen"
+                            :class="[
+                                page.url.startsWith('/dokumen')
+                                    ? 'text-teal-800 font-bold bg-teal-50/80'
+                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                                'px-3.5 py-2 rounded-xl text-xs transition-all duration-150 flex items-center gap-1.5 cursor-pointer',
+                            ]"
+                        >
+                            <span>Dokumen</span>
+                            <ChevronDown
+                                class="w-3.5 h-3.5 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isDocumentDropdownOpen }"
+                            />
+                        </button>
 
-                    <Link
-                        href="/berita"
-                        :class="[
-                            page.url.startsWith('/berita')
-                                ? 'text-teal-800 font-bold bg-teal-50/80'
-                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
-                            'px-3.5 py-2 rounded-xl text-xs transition-all duration-150',
-                        ]"
-                    >
-                        Berita 6 Bidang
-                    </Link>
+                        <!-- Dropdown Sub-Menu Card -->
+                        <Transition
+                            enter-active-class="transition duration-200 ease-out"
+                            enter-from-class="opacity-0 translate-y-2 scale-95"
+                            enter-to-class="opacity-100 translate-y-0 scale-100"
+                            leave-active-class="transition duration-150 ease-in"
+                            leave-from-class="opacity-100 translate-y-0 scale-100"
+                            leave-to-class="opacity-0 translate-y-2 scale-95"
+                        >
+                            <div
+                                v-if="isDocumentDropdownOpen"
+                                class="absolute left-0 top-full pt-2 z-50 w-72 sm:w-80"
+                            >
+                                <div class="bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/90 p-2 space-y-0.5">
+                                    <div class="px-3 py-1.5 border-b border-slate-100 mb-1">
+                                        <span class="text-[10px] font-bold text-teal-800 uppercase tracking-wider block">
+                                            Publikasi Dokumen
+                                        </span>
+                                        <span class="text-[11px] text-slate-500">
+                                            Perencanaan, Kajian & Analisis Daerah
+                                        </span>
+                                    </div>
+
+                                    <template v-for="sub in documentSubMenus" :key="sub.name">
+                                        <Link
+                                            :href="sub.href"
+                                            class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-teal-50/80 transition-colors group/item"
+                                            :class="{ 'bg-teal-50 text-teal-900': page.url === sub.href }"
+                                            @click="isDocumentDropdownOpen = false"
+                                        >
+                                            <div class="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 group-hover/item:bg-teal-700 group-hover/item:text-white flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                                                <component :is="sub.icon" class="w-3.5 h-3.5" />
+                                            </div>
+                                            <div class="space-y-0.5">
+                                                <div class="text-xs font-bold text-slate-900 group-hover/item:text-teal-800 transition-colors flex items-center gap-1.5">
+                                                    <span>{{ sub.name }}</span>
+                                                </div>
+                                                <p class="text-[10px] text-slate-500 leading-tight">
+                                                    {{ sub.desc }}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    </template>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
+
+                    <!-- Dropdown Menu Berita 6 Bidang -->
+                    <div class="relative" @mouseleave="isNewsDropdownOpen = false">
+                        <button
+                            type="button"
+                            @click="isNewsDropdownOpen = !isNewsDropdownOpen"
+                            :class="[
+                                page.url.startsWith('/berita')
+                                    ? 'text-teal-800 font-bold bg-teal-50/80'
+                                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                                'px-3.5 py-2 rounded-xl text-xs transition-all duration-150 flex items-center gap-1.5 cursor-pointer',
+                            ]"
+                        >
+                            <span>Berita</span>
+                            <ChevronDown
+                                class="w-3.5 h-3.5 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isNewsDropdownOpen }"
+                            />
+                        </button>
+
+                        <!-- Dropdown Sub-Menu Card -->
+                        <Transition
+                            enter-active-class="transition duration-200 ease-out"
+                            enter-from-class="opacity-0 translate-y-2 scale-95"
+                            enter-to-class="opacity-100 translate-y-0 scale-100"
+                            leave-active-class="transition duration-150 ease-in"
+                            leave-from-class="opacity-100 translate-y-0 scale-100"
+                            leave-to-class="opacity-0 translate-y-2 scale-95"
+                        >
+                            <div
+                                v-if="isNewsDropdownOpen"
+                                class="absolute left-0 top-full pt-2 z-50 w-72 sm:w-80"
+                            >
+                                <div class="bg-white/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/90 p-2 space-y-0.5">
+                                    <div class="px-3 py-1.5 border-b border-slate-100 mb-1 flex items-center justify-between">
+                                        <div>
+                                            <span class="text-[10px] font-bold text-teal-800 uppercase tracking-wider block">
+                                                Warta 6 Bidang
+                                            </span>
+                                            <span class="text-[11px] text-slate-500">
+                                                Majalah & Berita Daerah
+                                            </span>
+                                        </div>
+                                        <Link
+                                            href="/berita"
+                                            class="text-[10px] font-bold text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 px-2 py-1 rounded-md transition-colors"
+                                            @click="isNewsDropdownOpen = false"
+                                        >
+                                            Semua Berita
+                                        </Link>
+                                    </div>
+
+                                    <template v-for="sub in newsSubMenus" :key="sub.name">
+                                        <Link
+                                            :href="sub.href"
+                                            class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-teal-50/80 transition-colors group/item"
+                                            :class="{ 'bg-teal-50 text-teal-900': page.url === sub.href }"
+                                            @click="isNewsDropdownOpen = false"
+                                        >
+                                            <div class="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 group-hover/item:bg-teal-700 group-hover/item:text-white flex items-center justify-center shrink-0 transition-colors mt-0.5">
+                                                <component :is="sub.icon" class="w-3.5 h-3.5" />
+                                            </div>
+                                            <div class="space-y-0.5">
+                                                <div class="text-xs font-bold text-slate-900 group-hover/item:text-teal-800 transition-colors flex items-center gap-1.5">
+                                                    <span>{{ sub.name }}</span>
+                                                </div>
+                                                <p class="text-[10px] text-slate-500 leading-tight">
+                                                    {{ sub.desc }}
+                                                </p>
+                                            </div>
+                                        </Link>
+                                    </template>
+                                </div>
+                            </div>
+                        </Transition>
+                    </div>
 
                     <Link
                         href="/layanan"
@@ -336,21 +479,71 @@ const externalLinks = [
                         </div>
                     </div>
 
-                    <Link
-                        href="/dokumen"
-                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
-                        @click="isMobileMenuOpen = false"
-                    >
-                        Dokumen Perencanaan
-                    </Link>
+                    <!-- Mobile Accordion Dokumen -->
+                    <div class="space-y-1">
+                        <button
+                            type="button"
+                            @click="isMobileDocumentOpen = !isMobileDocumentOpen"
+                            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors cursor-pointer"
+                        >
+                            <span>Dokumen</span>
+                            <ChevronDown
+                                class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isMobileDocumentOpen }"
+                            />
+                        </button>
 
-                    <Link
-                        href="/berita"
-                        class="block px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
-                        @click="isMobileMenuOpen = false"
-                    >
-                        Berita 6 Bidang
-                    </Link>
+                        <div v-show="isMobileDocumentOpen" class="pl-2 pr-1 py-1 space-y-1 bg-slate-50/80 rounded-xl">
+                            <template v-for="sub in documentSubMenus" :key="sub.name">
+                                <Link
+                                    :href="sub.href"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-teal-800 hover:bg-white transition-colors"
+                                    :class="{ 'text-teal-800 font-bold bg-white shadow-2xs': page.url === sub.href }"
+                                    @click="isMobileMenuOpen = false"
+                                >
+                                    <component :is="sub.icon" class="w-3.5 h-3.5 text-teal-700 shrink-0" />
+                                    <span>{{ sub.name }}</span>
+                                </Link>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Accordion Berita 6 Bidang -->
+                    <div class="space-y-1">
+                        <button
+                            type="button"
+                            @click="isMobileNewsOpen = !isMobileNewsOpen"
+                            class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors cursor-pointer"
+                        >
+                            <span>Berita</span>
+                            <ChevronDown
+                                class="w-4 h-4 transition-transform duration-200"
+                                :class="{ 'rotate-180 text-teal-700': isMobileNewsOpen }"
+                            />
+                        </button>
+
+                        <div v-show="isMobileNewsOpen" class="pl-2 pr-1 py-1 space-y-1 bg-slate-50/80 rounded-xl">
+                            <Link
+                                href="/berita"
+                                class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold text-teal-900 bg-teal-100/60 hover:bg-teal-100 transition-colors mb-1"
+                                @click="isMobileMenuOpen = false"
+                            >
+                                <span>Semua Berita & Majalah</span>
+                                <ChevronRight class="w-3.5 h-3.5" />
+                            </Link>
+                            <template v-for="sub in newsSubMenus" :key="sub.name">
+                                <Link
+                                    :href="sub.href"
+                                    class="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:text-teal-800 hover:bg-white transition-colors"
+                                    :class="{ 'text-teal-800 font-bold bg-white shadow-2xs': page.url === sub.href }"
+                                    @click="isMobileMenuOpen = false"
+                                >
+                                    <component :is="sub.icon" class="w-3.5 h-3.5 text-teal-700 shrink-0" />
+                                    <span>{{ sub.name }}</span>
+                                </Link>
+                            </template>
+                        </div>
+                    </div>
 
                     <Link
                         href="/layanan"
@@ -438,11 +631,15 @@ const externalLinks = [
                             </p>
                             <p class="flex items-center gap-2">
                                 <span class="text-teal-400 font-bold">✉️</span>
-                                <span>bapperida@pringsewukab.go.id</span>
+                                <a href="mailto:bapperida@pringsewukab.go.id" class="hover:text-teal-300 transition-colors">bapperida@pringsewukab.go.id</a>
                             </p>
                             <p class="flex items-center gap-2">
-                                <span class="text-teal-400 font-bold">📷</span>
-                                <span>@bapperridapsw</span>
+                                <span class="text-pink-400 font-bold">📸</span>
+                                <a href="https://www.instagram.com/bapperidapsw" target="_blank" rel="noopener noreferrer" class="hover:text-teal-300 transition-colors">Instagram: @bapperidapsw</a>
+                            </p>
+                            <p class="flex items-center gap-2">
+                                <span class="text-red-400 font-bold">▶️</span>
+                                <a href="https://www.youtube.com/@swarabapperida" target="_blank" rel="noopener noreferrer" class="hover:text-teal-300 transition-colors">YouTube: swarabapperida</a>
                             </p>
                         </div>
                     </div>

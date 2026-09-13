@@ -5,5 +5,5 @@ defineProps<Omit<Props, 'baseUrl'>>();
 </script>
 
 <template>
-    <MagazineView v-bind="$props" baseUrl="/berita" />
+    <MagazineView v-bind="$props" baseUrl="/berita/ipw" />
 </template>

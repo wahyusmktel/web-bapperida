@@ -11,39 +11,61 @@ import {
     ChevronLeft,
     Sparkles,
     ArrowRight,
-    Check,
+    Clock,
+    ChevronRight,
+    Bookmark
 } from 'lucide-vue-next';
 
+interface ArticleData {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    content: string;
+    category_name: string;
+    category_code: string;
+    category_slug: string;
+    category_color: string;
+    author_name: string;
+    featured_image: string | null;
+    published_at: string;
+    views_count: number;
+    reading_time: string;
+}
+
+interface RelatedArticle {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    category_name: string;
+    category_code: string;
+    published_at: string;
+}
+
+interface PopularArticle {
+    id: string;
+    title: string;
+    slug: string;
+    excerpt: string;
+    category_name: string;
+    category_code: string;
+    category_slug: string;
+    published_at: string;
+    views_count: number;
+}
+
 interface Props {
-    article: {
-        id: string;
-        title: string;
-        slug: string;
-        excerpt: string;
-        content: string;
-        category_name: string;
-        category_code: string;
-        author_name: string;
-        featured_image: string | null;
-        published_at: string;
-        views_count: number;
-    };
-    relatedArticles: Array<{
-        id: string;
-        title: string;
-        slug: string;
-        excerpt: string;
-        category_name: string;
-        category_code: string;
-        published_at: string;
-    }>;
+    article: ArticleData;
+    relatedArticles: RelatedArticle[];
+    popularArticles?: PopularArticle[];
 }
 
 const props = defineProps<Props>();
 
 const copyArticleLink = () => {
     navigator.clipboard.writeText(window.location.href);
-    notify.success('Tautan Disalin', 'Tautan rilis berita berhasil disalin ke clipboard.');
+    notify.success('Tautan Berhasil Disalin', 'Tautan warta resmi telah tersimpan di clipboard.');
 };
 
 const shareToWhatsapp = () => {
@@ -53,53 +75,85 @@ const shareToWhatsapp = () => {
 </script>
 
 <template>
-    <Head :title="`${article.title} - BAPPERIDA Pringsewu`" />
+    <Head :title="`${article.title} - Warta BAPPERIDA Pringsewu`" />
 
     <PublicLayout>
-        <!-- Article Header Breadcrumb -->
-        <div class="bg-slate-100/70 border-b border-slate-200/60 py-4 px-4 sm:px-8">
-            <div class="max-w-4xl mx-auto flex items-center justify-between text-xs">
-                <Link href="/berita" class="inline-flex items-center gap-1.5 text-teal-800 font-bold hover:underline">
-                    <ChevronLeft class="w-4 h-4" />
-                    <span>Kembali ke Seluruh Berita</span>
-                </Link>
-                <span class="text-slate-400 font-mono">BAPPERIDA News</span>
+        <!-- Top Editorial Masthead Bar with AI-generated Pringsewu Background -->
+        <section class="relative overflow-hidden bg-slate-950 text-white py-12 sm:py-16 px-4 sm:px-8 border-b border-teal-900/40">
+            <div class="absolute inset-0 z-0">
+                <img
+                    src="/images/pringsewu_magazine_bg.jpg"
+                    alt="Pringsewu Background"
+                    class="w-full h-full object-cover object-center opacity-30 mix-blend-luminosity"
+                />
+                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-teal-950/85" />
             </div>
-        </div>
 
-        <article class="py-12 px-4 sm:px-8 max-w-4xl mx-auto space-y-8">
-            <!-- Header Meta -->
-            <div class="space-y-4">
-                <div class="flex flex-wrap items-center gap-2 text-xs">
-                    <span class="px-3 py-1 rounded-md font-bold uppercase tracking-wider bg-teal-50 text-teal-800 border border-teal-200/60">
-                        {{ article.category_code }} • {{ article.category_name }}
+            <div class="relative z-10 max-w-4xl mx-auto space-y-4">
+                <!-- Breadcrumbs -->
+                <div class="flex flex-wrap items-center gap-2 text-xs text-teal-300/80 font-medium">
+                    <Link href="/" class="hover:text-white transition-colors">Beranda</Link>
+                    <ChevronRight class="w-3.5 h-3.5 text-teal-500" />
+                    <Link href="/berita" class="hover:text-white transition-colors">Berita 6 Bidang</Link>
+                    <ChevronRight class="w-3.5 h-3.5 text-teal-500" />
+                    <Link :href="`/berita/${article.category_slug}`" class="text-teal-300 hover:text-white transition-colors font-bold uppercase">
+                        {{ article.category_name }}
+                    </Link>
+                </div>
+
+                <!-- Category Badge & Reading Time -->
+                <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <Link
+                        :href="`/berita/${article.category_slug}`"
+                        class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-400 text-slate-950 hover:bg-amber-300 transition-colors shadow-xs"
+                    >
+                        {{ article.category_name }}
+                    </Link>
+                    <span class="text-xs text-slate-300 flex items-center gap-1">
+                        <Clock class="w-3.5 h-3.5 text-teal-400" />
+                        {{ article.reading_time }}
                     </span>
-                    <span class="text-slate-400">•</span>
-                    <span class="text-slate-500 flex items-center gap-1">
-                        <Calendar class="w-3.5 h-3.5 text-slate-400" /> {{ article.published_at }}
-                    </span>
-                    <span class="text-slate-400">•</span>
-                    <span class="text-slate-500 flex items-center gap-1">
-                        <User class="w-3.5 h-3.5 text-slate-400" /> {{ article.author_name }}
+                    <span class="text-slate-500">•</span>
+                    <span class="text-xs text-slate-300 flex items-center gap-1">
+                        <Eye class="w-3.5 h-3.5 text-teal-400" />
+                        {{ article.views_count }} Kali Dibaca
                     </span>
                 </div>
 
-                <h1 class="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+                <!-- Article Headline -->
+                <h1 class="text-2xl sm:text-4xl font-black text-white tracking-tight leading-tight pt-1">
                     {{ article.title }}
                 </h1>
 
-                <p class="text-sm sm:text-base text-slate-600 font-medium leading-relaxed italic border-l-4 border-teal-700 pl-4 bg-slate-50 py-3 rounded-r-xl">
-                    {{ article.excerpt }}
+                <!-- Author & Date -->
+                <div class="flex items-center gap-3 pt-2 text-xs text-slate-300">
+                    <div class="w-8 h-8 rounded-full bg-teal-700 text-white flex items-center justify-center font-bold text-xs">
+                        BP
+                    </div>
+                    <div>
+                        <span class="font-bold text-white block">{{ article.author_name }}</span>
+                        <span class="text-slate-400 text-[11px]">{{ article.published_at }}</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Article Body -->
+        <main class="py-12 px-4 sm:px-8 max-w-4xl mx-auto space-y-8">
+            <!-- Lead Excerpt Callout -->
+            <div class="p-6 sm:p-7 rounded-2xl bg-gradient-to-r from-teal-50 to-emerald-50 border-l-4 border-teal-800 shadow-2xs">
+                <p class="text-sm sm:text-base text-slate-700 font-medium leading-relaxed italic">
+                    "{{ article.excerpt }}"
                 </p>
             </div>
 
-            <!-- Share Buttons & Views Count -->
-            <div class="flex items-center justify-between py-3 border-y border-slate-200/80 text-xs">
+            <!-- Share Buttons & Actions -->
+            <div class="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-slate-200 text-xs">
                 <div class="flex items-center gap-2">
-                    <span class="font-bold text-slate-600 mr-2">Bagikan Berita:</span>
+                    <span class="font-bold text-slate-700 mr-1">Bagikan Liputan:</span>
                     <button
                         type="button"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-teal-50 hover:text-teal-800 text-slate-700 font-medium transition-all cursor-pointer"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-teal-50 hover:text-teal-800 text-slate-700 font-bold transition-all cursor-pointer border border-slate-200"
                         @click="copyArticleLink"
                     >
                         <Copy class="w-3.5 h-3.5" />
@@ -107,7 +161,7 @@ const shareToWhatsapp = () => {
                     </button>
                     <button
                         type="button"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-medium transition-all cursor-pointer"
+                        class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold transition-all cursor-pointer shadow-xs"
                         @click="shareToWhatsapp"
                     >
                         <Share2 class="w-3.5 h-3.5" />
@@ -115,40 +169,70 @@ const shareToWhatsapp = () => {
                     </button>
                 </div>
 
-                <span class="text-slate-400 flex items-center gap-1 text-[11px]">
-                    <Eye class="w-3.5 h-3.5" /> {{ article.views_count }} Kali Dibaca
-                </span>
+                <Link
+                    :href="`/berita/${article.category_slug}`"
+                    class="inline-flex items-center gap-1 text-teal-800 hover:text-teal-950 font-bold"
+                >
+                    <ChevronLeft class="w-4 h-4" />
+                    <span>Kembali ke Rubrik {{ article.category_name }}</span>
+                </Link>
             </div>
 
-            <!-- Article Body Content -->
+            <!-- Article Prose Content -->
             <div
-                class="prose prose-slate max-w-none text-slate-700 leading-relaxed text-sm sm:text-base space-y-4"
+                class="prose prose-slate max-w-none text-slate-800 leading-relaxed text-sm sm:text-base space-y-4 pt-2"
                 v-html="article.content"
             />
 
+            <!-- Editorial Tag Box -->
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div class="space-y-1">
+                    <span class="text-xs font-bold text-slate-800 block">
+                        Diterbitkan oleh BAPPERIDA Kabupaten Pringsewu
+                    </span>
+                    <p class="text-xs text-slate-500">
+                        Badan Perencanaan Pembangunan, Riset dan Inovasi Daerah • Maju, Mandiri, Berkelanjutan
+                    </p>
+                </div>
+                <Link
+                    href="/berita"
+                    class="px-4 py-2 rounded-xl bg-teal-800 text-white text-xs font-bold hover:bg-teal-900 transition-colors shrink-0"
+                >
+                    Jelajahi Warta Lainnya
+                </Link>
+            </div>
+
             <!-- Related Articles -->
-            <div v-if="relatedArticles.length > 0" class="pt-12 mt-12 border-t border-slate-200 space-y-6">
-                <h3 class="text-lg font-bold text-slate-900">
-                    Warta Terkait dari Bidang yang Sama
-                </h3>
+            <section v-if="relatedArticles.length > 0" class="pt-8 border-t border-slate-200 space-y-5">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-5 bg-teal-700 rounded-full" />
+                    <h3 class="text-base sm:text-lg font-black text-slate-900 tracking-tight">
+                        Warta Terkait di Bidang {{ article.category_name }}
+                    </h3>
+                </div>
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div
+                    <article
                         v-for="rel in relatedArticles"
                         :key="rel.id"
-                        class="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:bg-white hover:shadow-xs transition-all space-y-2 flex flex-col justify-between"
+                        class="p-5 rounded-2xl bg-white border border-slate-200 hover:shadow-md transition-all flex flex-col justify-between space-y-3 group"
                     >
-                        <div class="space-y-1">
-                            <span class="text-[10px] font-bold text-teal-800 uppercase">{{ rel.category_code }}</span>
-                            <h4 class="text-xs font-bold text-slate-900 leading-snug line-clamp-2">
-                                <Link :href="`/berita/${rel.slug}`" class="hover:text-teal-800">
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-bold text-teal-800 uppercase tracking-wider bg-teal-50 px-2 py-0.5 rounded border border-teal-200/60">
+                                {{ rel.category_code }}
+                            </span>
+                            <Link :href="`/berita/${rel.slug}`" class="block">
+                                <h4 class="text-xs font-bold text-slate-900 group-hover:text-teal-800 transition-colors leading-snug line-clamp-2">
                                     {{ rel.title }}
-                                </Link>
-                            </h4>
+                                </h4>
+                            </Link>
                         </div>
-                        <span class="text-[10px] text-slate-400 block pt-2">{{ rel.published_at }}</span>
-                    </div>
+                        <span class="text-[10px] text-slate-400 block pt-1 border-t border-slate-100">
+                            {{ rel.published_at }}
+                        </span>
+                    </article>
                 </div>
-            </div>
-        </article>
+            </section>
+        </main>
     </PublicLayout>
 </template>

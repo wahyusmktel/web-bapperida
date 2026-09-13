@@ -71,6 +71,115 @@ class PublicDocumentController extends Controller
     }
 
     /**
+     * Display Dokumen Perencanaan.
+     */
+    public function perencanaan(Request $request): Response
+    {
+        return $this->renderCategoryDocuments(
+            $request,
+            'dokumen-perencanaan',
+            'Public/Documents/Perencanaan',
+            'Dokumen Perencanaan',
+            'Koleksi dokumen induk rencana pembangunan daerah Kabupaten Pringsewu meliputi RPJPD, RPJMD, RKPD, dan Renstra.',
+            'Rencana Pembangunan Daerah'
+        );
+    }
+
+    /**
+     * Display Dokumen Kajian.
+     */
+    public function kajian(Request $request): Response
+    {
+        return $this->renderCategoryDocuments(
+            $request,
+            'dokumen-kajian',
+            'Public/Documents/Kajian',
+            'Dokumen Kajian',
+            'Koleksi naskah akademik, kajian strategis kebijakan publik, dan riset kelayakan pembangunan Kabupaten Pringsewu.',
+            'Naskah Akademik & Riset Strategis'
+        );
+    }
+
+    /**
+     * Display Dokumen Analisis.
+     */
+    public function analisis(Request $request): Response
+    {
+        return $this->renderCategoryDocuments(
+            $request,
+            'dokumen-analisis',
+            'Public/Documents/Analisis',
+            'Dokumen Analisis',
+            'Koleksi analisis data spasial, ekonomi makro, dan daya dukung lingkungan hidup Kabupaten Pringsewu.',
+            'Analisis Data & Lingkungan Hidup'
+        );
+    }
+
+    /**
+     * Helper to render filtered documents by category slug.
+     */
+    private function renderCategoryDocuments(Request $request, string $categorySlug, string $component, string $title, string $description, string $badge): Response
+    {
+        $query = PlanningDocument::with('category:id,name,slug')
+            ->where('is_published', true)
+            ->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            })
+            ->latest('published_at');
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('document_number', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('year')) {
+            $query->where('year', $request->input('year'));
+        }
+
+        $documents = $query->paginate(9)->withQueryString()->through(function ($doc) {
+            return [
+                'id' => $doc->id,
+                'title' => $doc->title,
+                'slug' => $doc->slug,
+                'category_name' => $doc->category?->name ?? 'Dokumen',
+                'category_slug' => $doc->category?->slug ?? 'dokumen',
+                'year' => $doc->year,
+                'document_number' => $doc->document_number ?? '-',
+                'description' => $doc->description,
+                'file_name' => $doc->file_name,
+                'file_size' => $doc->formattedFileSize(),
+                'downloads_count' => $doc->downloads_count,
+                'published_at' => $doc->published_at?->translatedFormat('d F Y') ?? '-',
+            ];
+        });
+
+        $years = PlanningDocument::where('is_published', true)
+            ->whereHas('category', function ($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            })
+            ->select('year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year');
+
+        return Inertia::render($component, [
+            'documents' => $documents,
+            'years' => $years,
+            'meta' => [
+                'title' => $title,
+                'description' => $description,
+                'badge' => $badge,
+                'category_slug' => $categorySlug,
+            ],
+            'filters' => $request->only(['search', 'year']),
+        ]);
+    }
+
+    /**
      * Increment download counter and safely download document.
      */
     public function download(string $slug)

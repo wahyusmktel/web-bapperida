@@ -70,6 +70,33 @@ class PublicPortalTest extends TestCase
         );
     }
 
+    public function test_public_news_subpages_render_successfully(): void
+    {
+        $this->get(route('news.umum'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/News/Umum')->has('articles.data')->has('meta'));
+
+        $this->get(route('news.ppe'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/News/Ppe')->has('articles.data')->has('meta'));
+
+        $this->get(route('news.ppm'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/News/Ppm')->has('articles.data')->has('meta'));
+
+        $this->get(route('news.psda'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/News/Psda')->has('articles.data')->has('meta'));
+
+        $this->get(route('news.ipw'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/News/Ipw')->has('articles.data')->has('meta'));
+
+        $this->get(route('news.rida'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page->component('Public/News/Rida')->has('articles.data')->has('meta'));
+    }
+
     public function test_public_news_show_increments_views_count(): void
     {
         $article = NewsArticle::firstOrFail();
@@ -123,6 +150,36 @@ class PublicPortalTest extends TestCase
         $this->get(route('profile.kontak'))
             ->assertOk()
             ->assertInertia(fn ($page) => $page->component('Public/Profile/Kontak'));
+    }
+
+    public function test_public_documents_subpages_render_successfully(): void
+    {
+        $this->get(route('documents.perencanaan'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Documents/Perencanaan')
+                ->has('documents.data')
+                ->has('years')
+                ->has('meta')
+            );
+
+        $this->get(route('documents.kajian'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Documents/Kajian')
+                ->has('documents.data')
+                ->has('years')
+                ->has('meta')
+            );
+
+        $this->get(route('documents.analisis'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Public/Documents/Analisis')
+                ->has('documents.data')
+                ->has('years')
+                ->has('meta')
+            );
     }
 
     public function test_public_services_page_renders_successfully(): void
