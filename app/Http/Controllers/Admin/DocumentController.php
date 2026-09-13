@@ -114,6 +114,7 @@ class DocumentController extends Controller
         ]);
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'document.create',
@@ -161,6 +162,7 @@ class DocumentController extends Controller
         ]);
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'document.update',
@@ -180,6 +182,7 @@ class DocumentController extends Controller
         $document->save();
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'document.toggle_publish',
@@ -205,6 +208,7 @@ class DocumentController extends Controller
         $document->delete();
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'document.delete',

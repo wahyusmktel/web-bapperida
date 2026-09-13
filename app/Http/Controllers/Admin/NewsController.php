@@ -102,6 +102,7 @@ class NewsController extends Controller
         ]);
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'news.create',
@@ -146,6 +147,7 @@ class NewsController extends Controller
         ]);
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'news.update',
@@ -171,6 +173,7 @@ class NewsController extends Controller
         $article->delete();
 
         Cache::forget('bapperida:stats:overview');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'news.delete',

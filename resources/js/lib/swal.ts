@@ -1,21 +1,23 @@
-import Swal, { type SweetAlertOptions } from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 /**
  * Standard SweetAlert2 configuration for BAPPERIDA Kabupaten Pringsewu.
  * Matches brand identity: Deep Teal, Clean Slate, Warm Amber, and Rose accents.
  */
+const defaultCustomClasses = {
+    popup: 'rounded-2xl shadow-2xl border border-slate-100 p-6 font-sans text-slate-800',
+    title: 'text-xl font-bold text-slate-900 mb-2 tracking-tight',
+    htmlContainer: 'text-sm text-slate-600 leading-relaxed',
+    confirmButton:
+        'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-teal-700 hover:bg-teal-800 active:scale-[0.98] transition-all duration-150 shadow-sm mx-1 cursor-pointer outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2',
+    cancelButton:
+        'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.98] transition-all duration-150 mx-1 cursor-pointer outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2',
+    denyButton:
+        'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-rose-600 hover:bg-rose-700 active:scale-[0.98] transition-all duration-150 mx-1 cursor-pointer',
+};
+
 const bapperidaSwal = Swal.mixin({
-    customClass: {
-        popup: 'rounded-2xl shadow-2xl border border-slate-100 p-6 font-sans text-slate-800',
-        title: 'text-xl font-bold text-slate-900 mb-2 tracking-tight',
-        htmlContainer: 'text-sm text-slate-600 leading-relaxed',
-        confirmButton:
-            'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-teal-700 hover:bg-teal-800 active:scale-[0.98] transition-all duration-150 shadow-sm mx-1 cursor-pointer outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2',
-        cancelButton:
-            'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-slate-700 bg-slate-100 hover:bg-slate-200 active:scale-[0.98] transition-all duration-150 mx-1 cursor-pointer outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2',
-        denyButton:
-            'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-rose-600 hover:bg-rose-700 active:scale-[0.98] transition-all duration-150 mx-1 cursor-pointer',
-    },
+    customClass: defaultCustomClasses,
     buttonsStyling: false,
     focusConfirm: false,
     showClass: {
@@ -54,7 +56,7 @@ export async function confirmAction({
         cancelButtonText,
         reverseButtons: true,
         customClass: {
-            ...bapperidaSwal.params?.customClass,
+            ...defaultCustomClasses,
             confirmButton: isDestructive
                 ? 'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-rose-600 hover:bg-rose-700 active:scale-[0.98] transition-all duration-150 shadow-sm mx-1 cursor-pointer outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2'
                 : 'inline-flex items-center justify-center px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-teal-700 hover:bg-teal-800 active:scale-[0.98] transition-all duration-150 shadow-sm mx-1 cursor-pointer outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2',

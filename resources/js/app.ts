@@ -10,7 +10,7 @@ void createInertiaApp({
         color: '#0F766E',
     },
     setup({ el, App, props, plugin }) {
-        createApp({
+        const app = createApp({
             render: () =>
                 h('div', { id: 'app-root', class: 'min-h-screen flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900' }, [
                     h(App, props),
@@ -21,8 +21,12 @@ void createInertiaApp({
                         theme: 'light',
                     }),
                 ]),
-        })
-            .use(plugin)
-            .mount(el);
+        }).use(plugin);
+
+        if (el) {
+            app.mount(el);
+        }
+
+        return app;
     },
 });

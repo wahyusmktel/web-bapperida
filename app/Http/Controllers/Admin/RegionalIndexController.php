@@ -55,6 +55,7 @@ class RegionalIndexController extends Controller
 
         Cache::forget('bapperida:stats:overview');
         Cache::forget('bapperida:stats:indexes');
+        Cache::forget('bapperida:public:home');
 
         ActivityLog::record(
             action: 'index.update',
