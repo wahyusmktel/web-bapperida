@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DocumentController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\RegionalIndexController;
+use App\Http\Controllers\Admin\SppgAuditAdminController;
 use App\Http\Controllers\Public\HomeController;
 use App\Http\Controllers\Public\ProfileController;
 use App\Http\Controllers\Public\PublicAwardController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Public\PublicDocumentController;
 use App\Http\Controllers\Public\PublicNewsController;
 use App\Http\Controllers\Public\PublicReportController;
 use App\Http\Controllers\Public\PublicServiceController;
+use App\Http\Controllers\Public\SppgAuditPublicController;
 use Illuminate\Support\Facades\Route;
 
 // Public portal routes
@@ -56,6 +58,12 @@ Route::get('/laporan/lakip', [PublicReportController::class, 'lakip'])->name('re
 Route::get('/layanan', [PublicServiceController::class, 'index'])->name('services.index');
 Route::post('/layanan/permohonan-data', [PublicServiceController::class, 'submitDataRequest'])->name('services.data-request');
 Route::post('/layanan/survei-ikm', [PublicServiceController::class, 'submitSurvey'])->name('services.survey');
+
+// Modul Audit Kelayakan Operasional SPPG (Program Makan Bergizi Gratis - Satgas MBG)
+Route::get('/audit-sppg', [SppgAuditPublicController::class, 'index'])->name('public.audit-sppg.index');
+Route::get('/audit-sppg/form', [SppgAuditPublicController::class, 'create'])->name('public.audit-sppg.create');
+Route::post('/audit-sppg/form', [SppgAuditPublicController::class, 'store'])->name('public.audit-sppg.store');
+Route::get('/audit-sppg/{id}', [SppgAuditPublicController::class, 'show'])->name('public.audit-sppg.show');
 
 // Dynamic SEO XML Sitemap
 Route::get('/sitemap.xml', function () {
@@ -152,5 +160,11 @@ Route::prefix('admin')->group(function () {
         // Modul Indeks Capaian Daerah
         Route::get('/indexes', [RegionalIndexController::class, 'index'])->name('admin.indexes.index');
         Route::put('/indexes/{index}', [RegionalIndexController::class, 'update'])->name('admin.indexes.update');
+
+        // Modul Audit Kelayakan SPPG (Satgas MBG)
+        Route::get('/sppg-audits', [SppgAuditAdminController::class, 'index'])->name('admin.sppg-audits.index');
+        Route::get('/sppg-audits/{id}', [SppgAuditAdminController::class, 'show'])->name('admin.sppg-audits.show');
+        Route::patch('/sppg-audits/{id}/toggle-verify', [SppgAuditAdminController::class, 'toggleVerification'])->name('admin.sppg-audits.toggle');
+        Route::delete('/sppg-audits/{id}', [SppgAuditAdminController::class, 'destroy'])->name('admin.sppg-audits.destroy');
     });
 });

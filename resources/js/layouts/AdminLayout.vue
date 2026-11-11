@@ -18,6 +18,7 @@ import {
     ChevronRight,
     Sparkles,
     Activity,
+    ClipboardCheck,
 } from 'lucide-vue-next';
 
 interface Props {
@@ -63,6 +64,13 @@ const navigation = [
         href: '/admin/indexes',
         icon: BarChart3,
         active: page.url.startsWith('/admin/indexes'),
+    },
+    {
+        name: 'Audit SPPG (Satgas MBG)',
+        href: '/admin/sppg-audits',
+        badge: 'Modul BGN',
+        icon: ClipboardCheck,
+        active: page.url.startsWith('/admin/sppg-audits'),
     },
     {
         name: 'Manajemen Pengguna',

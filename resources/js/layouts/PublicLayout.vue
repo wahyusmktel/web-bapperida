@@ -472,6 +472,19 @@ const externalLinks = [
                     >
                         Layanan & Aspirasi
                     </Link>
+
+                    <Link
+                        href="/audit-sppg"
+                        :class="[
+                            page.url.startsWith('/audit-sppg')
+                                ? 'text-teal-800 font-bold bg-teal-50/80 ring-1 ring-teal-600/30'
+                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50 font-medium',
+                            'px-3 py-2 rounded-xl text-xs transition-all duration-150 inline-flex items-center gap-1.5',
+                        ]"
+                    >
+                        <span>Audit SPPG</span>
+                        <span class="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">MBG</span>
+                    </Link>
                 </nav>
 
                 <!-- Header Actions -->
@@ -685,6 +698,17 @@ const externalLinks = [
                     >
                         Layanan & Aspirasi
                     </Link>
+
+                    <Link
+                        href="/audit-sppg"
+                        class="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-teal-50 hover:text-teal-800 transition-colors"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        <span class="flex items-center gap-2">
+                            <span>Audit SPPG (Satgas MBG)</span>
+                        </span>
+                        <span class="text-[9px] font-black px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">BGN</span>
+                    </Link>
                 </div>
 
                 <!-- External Links in Drawer -->
@@ -801,6 +825,12 @@ const externalLinks = [
                                 <Link href="/layanan" class="hover:text-teal-300 transition-colors flex items-center gap-1.5">
                                     <ChevronRight class="w-3 h-3 text-teal-400" />
                                     Survei Kepuasan Masyarakat (IKM)
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/audit-sppg" class="hover:text-teal-300 transition-colors flex items-center gap-1.5">
+                                    <ChevronRight class="w-3 h-3 text-teal-400" />
+                                    Audit Kelayakan SPPG (MBG)
                                 </Link>
                             </li>
                             <li>

@@ -375,7 +375,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -397,7 +397,8 @@ INSERT INTO `migrations` VALUES
 (9,'2026_09_13_054831_create_news_tables',1),
 (10,'2026_09_13_054832_create_regional_indexes_and_officials_tables',1),
 (11,'2026_09_13_055351_create_service_requests_and_surveys_tables',1),
-(12,'2026_09_13_060000_create_awards_table',2);
+(12,'2026_09_13_060000_create_awards_table',2),
+(14,'2026_09_14_000001_create_sppg_audits_table',3);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
@@ -848,9 +849,178 @@ LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
 set autocommit=0;
 INSERT INTO `sessions` VALUES
-('3LKLRupAcE3e01cETJpIDwstl9jXsG8YiwKXmHb6',NULL,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36','eyJfdG9rZW4iOiJpVERnaEhESGliNkJBa0xuOVAyMG9YOGRHM093V1VQWnZZUUNWbmg1IiwidXJsIjp7ImludGVuZGVkIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjgwMDBcL2FkbWluIn0sIl9wcmV2aW91cyI6eyJ1cmwiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMCIsInJvdXRlIjoiaG9tZSJ9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX19',1789318105),
+('3LKLRupAcE3e01cETJpIDwstl9jXsG8YiwKXmHb6',NULL,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36','eyJfdG9rZW4iOiJpVERnaEhESGliNkJBa0xuOVAyMG9YOGRHM093V1VQWnZZUUNWbmg1IiwidXJsIjp7ImludGVuZGVkIjoiaHR0cDpcL1wvMTI3LjAuMC4xOjgwMDBcL2FkbWluIn0sIl9wcmV2aW91cyI6eyJ1cmwiOiJodHRwOlwvXC8xMjcuMC4wLjE6ODAwMCIsInJvdXRlIjoiaG9tZSJ9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX19',1789318207),
 ('l0BUu0D2UrdAZNAs9aPX3fxQx43zEHXpNF7gpBRH',NULL,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36','eyJfdG9rZW4iOiI3Rkwxbm4wYzJkZFFmU0I1U0hrVVI2bEhCRE5ad0pwd2JyM3k4UmRhIiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwIiwicm91dGUiOiJob21lIn0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfX0=',1789317340);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+commit;
+
+--
+-- Table structure for table `sppg_audits`
+--
+
+DROP TABLE IF EXISTS `sppg_audits`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sppg_audits` (
+  `id` char(36) NOT NULL,
+  `inspection_number` varchar(50) DEFAULT NULL,
+  `inspection_date` date NOT NULL,
+  `sppg_id_code` varchar(8) NOT NULL,
+  `sppg_name` varchar(255) NOT NULL,
+  `sppg_type` varchar(30) NOT NULL DEFAULT 'BGN',
+  `regency_city` varchar(255) NOT NULL DEFAULT 'Kabupaten Pringsewu',
+  `inspector_name` varchar(255) NOT NULL,
+  `beneficiary_count` int(11) NOT NULL DEFAULT 0,
+  `has_slhs` tinyint(1) NOT NULL DEFAULT 0,
+  `slhs_expiry_date` date DEFAULT NULL,
+  `slhs_doc_path` varchar(255) DEFAULT NULL,
+  `score_slhs` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `has_halal` tinyint(1) NOT NULL DEFAULT 0,
+  `halal_expiry_date` date DEFAULT NULL,
+  `halal_doc_path` varchar(255) DEFAULT NULL,
+  `score_halal` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_legalitas_dokumen` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `head_present` tinyint(1) NOT NULL DEFAULT 0,
+  `head_name` varchar(255) DEFAULT NULL,
+  `head_nik` varchar(20) DEFAULT NULL,
+  `head_phone` varchar(25) DEFAULT NULL,
+  `head_photo_path` varchar(255) DEFAULT NULL,
+  `head_ktp_path` varchar(255) DEFAULT NULL,
+  `score_head` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `nutritionist_status` varchar(30) NOT NULL DEFAULT 'tidak_ada',
+  `nutritionist_name` varchar(255) DEFAULT NULL,
+  `nutritionist_nik` varchar(20) DEFAULT NULL,
+  `nutritionist_phone` varchar(25) DEFAULT NULL,
+  `nutritionist_education` varchar(255) DEFAULT NULL,
+  `score_nutritionist` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `finance_present` tinyint(1) NOT NULL DEFAULT 0,
+  `finance_name` varchar(255) DEFAULT NULL,
+  `finance_nik` varchar(20) DEFAULT NULL,
+  `finance_phone` varchar(25) DEFAULT NULL,
+  `score_finance` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_staff_sppg` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `chef_present` tinyint(1) NOT NULL DEFAULT 0,
+  `chef_name` varchar(255) DEFAULT NULL,
+  `chef_nik` varchar(20) DEFAULT NULL,
+  `chef_phone` varchar(25) DEFAULT NULL,
+  `chef_photo_path` varchar(255) DEFAULT NULL,
+  `chef_ktp_path` varchar(255) DEFAULT NULL,
+  `score_chef_presence` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `chef_has_experience` tinyint(1) NOT NULL DEFAULT 0,
+  `chef_paklaring_number` varchar(255) DEFAULT NULL,
+  `chef_paklaring_doc_path` varchar(255) DEFAULT NULL,
+  `score_chef_experience` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_chef` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `drinking_water_source` varchar(30) NOT NULL DEFAULT 'sumur',
+  `drinking_water_photo_path` varchar(255) DEFAULT NULL,
+  `score_air_minum` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `cooking_water_source` varchar(30) NOT NULL DEFAULT 'sumur',
+  `cooking_water_photo_path` varchar(255) DEFAULT NULL,
+  `score_air_masak` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `chiller_unit_count` int(11) NOT NULL DEFAULT 0,
+  `chiller_temp_celsius` decimal(4,1) DEFAULT NULL,
+  `chiller_status` varchar(30) NOT NULL DEFAULT 'not_working',
+  `chiller_photo_path` varchar(255) DEFAULT NULL,
+  `score_chiller` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `freezer_unit_count` int(11) NOT NULL DEFAULT 0,
+  `freezer_temp_celsius` decimal(4,1) DEFAULT NULL,
+  `freezer_capacity_liters` int(11) DEFAULT NULL,
+  `freezer_status` varchar(30) NOT NULL DEFAULT 'not_working',
+  `freezer_photo_path` varchar(255) DEFAULT NULL,
+  `score_freezer` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_rantai_dingin` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `stove_high_pressure_count` int(11) NOT NULL DEFAULT 0,
+  `stove_low_pressure_count` int(11) NOT NULL DEFAULT 0,
+  `stove_all_working` tinyint(1) NOT NULL DEFAULT 0,
+  `stove_ratio` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `stove_condition` varchar(255) NOT NULL DEFAULT 'none',
+  `stove_photo_path` varchar(255) DEFAULT NULL,
+  `score_kompor` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `sink_persiapan` tinyint(1) NOT NULL DEFAULT 0,
+  `sink_pemorsian` tinyint(1) NOT NULL DEFAULT 0,
+  `sink_pengolahan` tinyint(1) NOT NULL DEFAULT 0,
+  `sink_kamar_mandi` tinyint(1) NOT NULL DEFAULT 0,
+  `sink_jalan_masuk` tinyint(1) NOT NULL DEFAULT 0,
+  `sink_photo_path` varchar(255) DEFAULT NULL,
+  `score_sink` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `ipal_functioning` tinyint(1) NOT NULL DEFAULT 0,
+  `ipal_photo_path` varchar(255) DEFAULT NULL,
+  `score_ipal` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `grease_trap_functioning` tinyint(1) NOT NULL DEFAULT 0,
+  `grease_trap_photo_path` varchar(255) DEFAULT NULL,
+  `score_grease_trap` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_sanitasi_dasar` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `apar_available` tinyint(1) NOT NULL DEFAULT 0,
+  `apar_expiry_date` date DEFAULT NULL,
+  `apar_is_valid` tinyint(1) NOT NULL DEFAULT 0,
+  `apar_photo_path` varchar(255) DEFAULT NULL,
+  `score_apar` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `label_has_time_limit` tinyint(1) NOT NULL DEFAULT 0,
+  `label_has_no_takeaway` tinyint(1) NOT NULL DEFAULT 0,
+  `label_photo_path` varchar(255) DEFAULT NULL,
+  `score_label_ompreng` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `land_area_sqm` decimal(8,2) NOT NULL DEFAULT 0.00,
+  `building_area_sqm` decimal(8,2) NOT NULL DEFAULT 0.00,
+  `area_compliance` varchar(30) NOT NULL DEFAULT 'sesuai',
+  `area_front_photo_path` varchar(255) DEFAULT NULL,
+  `building_front_photo_path` varchar(255) DEFAULT NULL,
+  `score_luasan` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `rack_dry_material` varchar(30) NOT NULL DEFAULT 'tidak_ada',
+  `pallet_dry_material` varchar(30) NOT NULL DEFAULT 'tidak_ada',
+  `rack_wet_material` varchar(30) NOT NULL DEFAULT 'tidak_ada',
+  `pallet_wet_material` varchar(30) NOT NULL DEFAULT 'tidak_ada',
+  `warehouse_dry_photo_path` varchar(255) DEFAULT NULL,
+  `warehouse_wet_photo_path` varchar(255) DEFAULT NULL,
+  `score_gudang` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `production_flow_status` varchar(50) NOT NULL DEFAULT 'sesuai_tanpa_catatan',
+  `production_flow_video_url` varchar(255) DEFAULT NULL,
+  `production_flow_notes` text DEFAULT NULL,
+  `score_alur_produksi` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `cctv_all_critical_points` tinyint(1) NOT NULL DEFAULT 0,
+  `cctv_unit_count` int(11) NOT NULL DEFAULT 0,
+  `cctv_type` varchar(30) DEFAULT NULL,
+  `cctv_photo_path` varchar(255) DEFAULT NULL,
+  `score_cctv` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `internet_speed_test_available` tinyint(1) NOT NULL DEFAULT 0,
+  `internet_download_mbps` decimal(6,2) DEFAULT NULL,
+  `internet_upload_mbps` decimal(6,2) DEFAULT NULL,
+  `internet_provider` varchar(255) DEFAULT NULL,
+  `internet_speed_test_photo_path` varchar(255) DEFAULT NULL,
+  `score_internet` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_cctv_internet` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_keamanan_pangan` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_legalitas_sdm` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `score_lahan_keselamatan` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `total_score` decimal(5,2) NOT NULL DEFAULT 0.00,
+  `grade` varchar(10) NOT NULL DEFAULT 'Grade D',
+  `recommendation` varchar(50) NOT NULL DEFAULT 'tidak_layak',
+  `recommendation_reason` text DEFAULT NULL,
+  `satgas_leader_name` varchar(255) NOT NULL DEFAULT 'Ketua Satgas MBG Pringsewu',
+  `satgas_leader_signature` text DEFAULT NULL,
+  `status` varchar(30) NOT NULL DEFAULT 'submitted',
+  `created_by_ip` varchar(45) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `sppg_audits_sppg_id_code_index` (`sppg_id_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sppg_audits`
+--
+
+LOCK TABLES `sppg_audits` WRITE;
+/*!40000 ALTER TABLE `sppg_audits` DISABLE KEYS */;
+set autocommit=0;
+INSERT INTO `sppg_audits` VALUES
+('01a1cb9d-1312-72fc-a513-26c101a417ff','ST-SATGAS/PSW/2026/014','2026-11-09','18020101','SPPG Sentra Dapur Mandiri Pringsewu Kota','Mandiri','Kabupaten Pringsewu','Ahmad Fadillah, S.Tr.Gz & Tim Satgas MBG',2500,1,'2028-05-11',NULL,6.00,1,'2028-11-11',NULL,6.00,12.00,1,'Bambang Sutejo, S.E.','1810011504820003','081273928192',NULL,NULL,2.00,'ada_gizi','Siti Aminah, S.Gz.','1810016508930002','082188291029','S1 Ilmu Gizi (Ahli Gizi Terdaftar)',2.00,1,'Dewi Rahmawati, A.Md.Ak.','1810014502950001','085278192039',1.00,5.00,1,'Chef Hardianto Saputra','1810012209880004','081399281720',NULL,NULL,3.00,1,'PKL-CHEF/HOTEL-BDL/2024-08',NULL,3.00,6.00,'ro',NULL,7.00,'ro',NULL,9.00,2,3.5,'optimal_le_5',NULL,5.00,2,-20.0,1200,'optimal_le_minus18',NULL,6.00,11.00,4,3,1,1.26,'Seluruh kompor berfungsi baik & ada kompor high pressure (rasio >= 1)',NULL,4.00,1,1,1,1,1,NULL,6.00,1,NULL,4.00,1,NULL,2.00,12.00,1,'2027-09-11',1,NULL,5.00,1,1,NULL,3.00,450.00,280.00,'sesuai',NULL,NULL,7.00,'stainless','stainless','stainless','stainless',NULL,NULL,8.00,'sesuai_tanpa_catatan','https://drive.google.com/file/d/sppg-pringsewu-flow-sample',NULL,8.00,1,12,'IP Cam NVR 4K',NULL,1.50,1,85.50,42.20,'IndiHome Fiber 100 Mbps',NULL,1.50,3.00,65.00,23.00,12.00,100.00,'Grade A','layak_dilanjutkan','Fasilitas sangat higienis, rantai dingin optimal, seluruh 10 titik kritis CCTV ter-cover dengan baik dan tenaga koki serta ahli gizi terverifikasi.','Drs. Akhmad Pratama, M.Si.',NULL,'verified',NULL,'2026-11-11 10:17:11','2026-11-11 10:17:11'),
+('01a1cb9d-131f-7376-bb26-a7891a20b6b2','ST-SATGAS/PSW/2026/015','2026-11-07','18020202','SPPG Sentra Gizi Sejahtera Gadingrejo','BGN','Kabupaten Pringsewu','dr. Hendra Kusuma & Tim Satgas MBG',1800,1,'2027-07-11',NULL,6.00,1,'2028-01-11',NULL,6.00,12.00,1,'H. Suryadi, S.Sos.','1810022003750001','082190827361',NULL,NULL,2.00,'ada_tekpang','Rina Marlina, S.T.P.','1810025107960003','081298371928','S1 Teknologi Pangan (Tekpang)',1.00,1,'Arif Wicaksono, S.E.','1810021406900002','085718293019',1.00,4.00,1,'Chef M. Yusuf Ansori','1810020803870005','081377281920',NULL,NULL,3.00,1,'PKL-RESTO-PRINGSEWU/2025/11',NULL,3.00,6.00,'galon',NULL,6.00,'galon',NULL,8.00,1,4.2,'optimal_le_5',NULL,5.00,1,-16.5,800,'above_minus18',NULL,3.00,8.00,2,3,1,1.25,'Seluruh kompor berfungsi baik & ada kompor high pressure (rasio >= 1)',NULL,4.00,1,1,1,1,0,NULL,4.80,1,NULL,4.00,1,NULL,2.00,10.80,1,'2027-04-11',1,NULL,5.00,1,1,NULL,3.00,350.00,210.00,'sesuai',NULL,NULL,7.00,'besi_plastik','besi_plastik','besi_plastik','besi_plastik',NULL,NULL,7.00,'sesuai_dengan_catatan','https://drive.google.com/file/d/sppg-gadingrejo-flow','Terdapat tirai plastik pemisah ruang pengolahan dan pemorsian, disarankan sekat partisi penuh.',6.00,1,10,'DVR 16 CH 1080P',NULL,1.50,1,45.10,18.30,'Biznet Home 50 Mbps',NULL,1.50,3.00,55.80,22.00,12.00,89.80,'Grade A','layak_dilanjutkan','Perlu kalibrasi suhu freezer agar konsisten di bawah -18°C dan penambahan 1 wastafel di area pintu masuk utama.','Drs. Akhmad Pratama, M.Si.',NULL,'verified',NULL,'2026-11-11 10:17:11','2026-11-11 10:17:11'),
+('01a1cb9d-1321-7262-83b8-f7536106c881','ST-SATGAS/PSW/2026/016','2026-11-04','18020303','SPPG Komunitas Tani Berkah Pagelaran','Khusus','Kabupaten Pringsewu','Ir. Muhammad Ridwan & Tim Satgas MBG',1200,0,NULL,NULL,0.00,1,'2027-05-11',NULL,6.00,6.00,1,'Wahyudi, S.Pd.','1810031105800001','085269182736',NULL,NULL,2.00,'tidak_ada',NULL,NULL,NULL,NULL,0.00,0,NULL,NULL,NULL,0.00,2.00,1,'Budi Santoso','1810031908850002','082281920394',NULL,NULL,3.00,0,NULL,NULL,0.00,3.00,'pdam',NULL,4.00,'sumur',NULL,2.00,1,7.0,'above_5',NULL,3.00,1,-12.0,500,'above_minus18',NULL,3.00,6.00,0,2,0,0.75,'Rasio kompor di bawah kapasitas PM (< 1)',NULL,0.00,1,0,1,1,0,NULL,3.60,0,NULL,0.00,1,NULL,2.00,5.60,0,NULL,0,NULL,0.00,0,0,NULL,0.00,200.00,130.00,'di_bawah_standar',NULL,NULL,3.00,'kayu','kayu','tidak_ada','tidak_ada',NULL,NULL,0.00,'tidak_sesuai',NULL,'Alur lalu lintas bahan baku bersilangan dengan sisa sampah/limbah.',4.00,0,2,'Stand Alone WiFi Cam',NULL,0.00,0,NULL,NULL,NULL,NULL,0.00,0.00,21.60,11.00,3.00,35.60,'Grade D','tidak_layak','Belum memiliki dokumen SLHS, palet kayu dilarang digunakan, IPAL belum berfungsi, dan belum ada tenaga ahli gizi tersertifikasi.','Drs. Akhmad Pratama, M.Si.',NULL,'submitted',NULL,'2026-11-11 10:17:11','2026-11-11 10:17:11'),
+('01a1cb9d-1323-728e-a6e6-89463ded7cf4','ST-SATGAS/PSW/2026/017','2026-11-10','18020404','SPPG Satgas Gizi Sukoharjo Makmur','BGN','Kabupaten Pringsewu','Nurmala Sari, S.KM. & Tim Satgas MBG',2200,1,'2027-11-11',NULL,6.00,1,'2028-07-11',NULL,6.00,12.00,1,'Dra. Hj. Nurjanah, M.Pd.','1810044501780002','081272819203',NULL,NULL,2.00,'ada_gizi','Fadhil Pratama, S.Gz.','1810042104950004','082177391029','S1 Gizi Kesehatan',2.00,1,'Tri Wulandari, S.Ak.','1810045903930001','085288192039',1.00,5.00,1,'Chef Agus Salim','1810041806840003','081399182736',NULL,NULL,3.00,1,'SK-CHEF/CATERING-MBG/2025-03',NULL,3.00,6.00,'ro',NULL,7.00,'ro',NULL,9.00,2,4.0,'optimal_le_5',NULL,5.00,2,-19.0,1000,'optimal_le_minus18',NULL,6.00,11.00,4,2,1,1.23,'Seluruh kompor berfungsi baik & ada kompor high pressure (rasio >= 1)',NULL,4.00,1,1,1,1,1,NULL,6.00,1,NULL,4.00,1,NULL,2.00,12.00,1,'2027-08-11',1,NULL,5.00,1,1,NULL,3.00,400.00,260.00,'sesuai',NULL,NULL,7.00,'stainless','stainless','stainless','stainless',NULL,NULL,8.00,'sesuai_tanpa_catatan','https://drive.google.com/file/d/sppg-sukoharjo-flow',NULL,8.00,1,11,'IP Cam 4MP PoE',NULL,1.50,1,78.40,38.60,'IndiHome 100 Mbps',NULL,1.50,3.00,65.00,23.00,12.00,100.00,'Grade A','layak_dilanjutkan','Standar higienitas dan sanitasi dapur sangat baik, penanganan rantai dingin memuaskan, dokumen legalitas lengkap.','Drs. Akhmad Pratama, M.Si.',NULL,'verified',NULL,'2026-11-11 10:17:11','2026-11-11 10:17:11'),
+('01a1cb9d-1324-717a-b646-27aad91481e4','ST-SATGAS/PSW/2026/018','2026-11-06','18020505','SPPG Gotong Royong Adiluwih','Mandiri','Kabupaten Pringsewu','Faisal Tanjung, S.T. & Tim Satgas MBG',1500,1,'2027-10-11',NULL,6.00,0,NULL,NULL,0.00,6.00,1,'Kurniawan, S.E.','1810052102830002','081273918201',NULL,NULL,2.00,'ada_tekpang','Dian Permata, S.T.P.','1810055208970001','082188273619','S1 Teknologi Industri Pertanian',1.00,1,'Agus Priyono','1810051103890003','085277182930',1.00,4.00,1,'Chef Danu Subroto','1810051907860004','081399281720',NULL,NULL,3.00,1,'PKL-RESTO-ADILUWIH/2025/09',NULL,3.00,6.00,'galon',NULL,6.00,'galon',NULL,8.00,1,4.5,'optimal_le_5',NULL,5.00,1,-15.0,600,'above_minus18',NULL,3.00,8.00,2,2,0,1.20,'Ada kompor tidak berfungsi tapi ada kompor high pressure (rasio >= 1)',NULL,2.00,1,1,1,1,0,NULL,4.80,1,NULL,4.00,1,NULL,2.00,10.80,1,'2027-05-11',1,NULL,5.00,1,1,NULL,3.00,300.00,180.00,'sesuai',NULL,NULL,7.00,'besi_plastik','besi_plastik','besi_plastik','besi_plastik',NULL,NULL,7.00,'sesuai_dengan_catatan',NULL,'Tirai sekat ruang pemorsian perlu diganti partisi aluminium permanen.',6.00,1,10,'DVR 16 CH',NULL,1.50,1,35.00,15.00,'Iconnet 35 Mbps',NULL,1.50,3.00,53.80,16.00,12.00,81.80,'Grade B','layak_dengan_perbaikan','Percepatan penerbitan Sertifikat Halal, perbaikan 1 unit tungku kompor bertekanan tinggi, dan penyesuaian suhu freezer hingga -18°C.','Drs. Akhmad Pratama, M.Si.',NULL,'verified',NULL,'2026-11-11 10:17:11','2026-11-11 10:17:11');
+/*!40000 ALTER TABLE `sppg_audits` ENABLE KEYS */;
 UNLOCK TABLES;
 commit;
 
@@ -931,4 +1101,4 @@ commit;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
 
--- Dump completed on 2026-09-13 23:49:27
+-- Dump completed on 2026-11-12  0:30:51
